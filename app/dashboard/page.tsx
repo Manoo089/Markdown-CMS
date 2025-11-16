@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { LogoutButton } from "./LogoutButton";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -16,7 +17,7 @@ export default async function DashboardPage() {
             <h1 className="text-xl font-bold">MDCMS Dashboard</h1>
             <div className="flex items-center gap-4">
               <span className="text-sm text-gray-600">{session.user.email}</span>
-              {/* Logout Button kommt gleich */}
+              <LogoutButton />
             </div>
           </div>
         </div>
