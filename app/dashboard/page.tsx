@@ -1,13 +1,8 @@
-import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import { requireAuth } from "@/lib/auth-utils";
 import { LogoutButton } from "./LogoutButton";
 
 export default async function DashboardPage() {
-  const session = await auth();
-
-  if (!session?.user) {
-    redirect("/login");
-  }
+  const session = await requireAuth();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -16,7 +11,7 @@ export default async function DashboardPage() {
           <div className="flex justify-between h-16 items-center">
             <h1 className="text-xl font-bold">MDCMS Dashboard</h1>
             <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600">{session.user.email}</span>
+              <span className="text-sm text-gray-600">{session?.user?.email}</span>
               <LogoutButton />
             </div>
           </div>
@@ -25,7 +20,7 @@ export default async function DashboardPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-2xl font-bold mb-4">Welcome, {session.user.name || session.user.email}!</h2>
+          <h2 className="text-2xl font-bold mb-4">Welcome, {session?.user?.name || session?.user?.email}!</h2>
           <p className="text-gray-600">You are successfully logged in. 🎉</p>
         </div>
       </main>
