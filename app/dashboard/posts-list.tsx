@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 
+import { DeleteButton } from "./delete-button";
+
 export async function PostsList() {
   const posts = await prisma.post.findMany({
     orderBy: { createdAt: "desc" },
@@ -55,12 +57,15 @@ export async function PostsList() {
                   </span>
                 </div>
               </div>
-              <Link
-                href={`/dashboard/posts/${post.id}/edit`}
-                className="ml-4 text-blue-600 hover:text-blue-800 text-sm font-medium"
-              >
-                Edit
-              </Link>
+              <div className="ml-4 flex gap-3">
+                <Link
+                  href={`/dashboard/posts/${post.id}/edit`}
+                  className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                >
+                  Edit
+                </Link>
+                <DeleteButton postId={post.id} postTitle={post.title} />
+              </div>
             </div>
           </div>
         ))}
