@@ -2,8 +2,16 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 
 import { DeleteButton } from "./delete-button";
+import { POSTS_PER_PAGE } from "@/lib/constants";
 
-export async function PostsList() {
+interface Props {
+  page?: number;
+}
+
+export async function PostsList({ page = 1 }: Props) {
+  const totalPosts = await prisma.post.count();
+  const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
+
   const posts = await prisma.post.findMany({
     orderBy: { createdAt: "desc" },
     include: {
@@ -11,9 +19,11 @@ export async function PostsList() {
         select: { name: true, email: true },
       },
     },
+    skip: (page - 1) * POSTS_PER_PAGE,
+    take: POSTS_PER_PAGE,
   });
 
-  if (posts.length === 0) {
+  if (totalPosts === 0) {
     return (
       <div className="text-center py-12">
         <p className="text-gray-500 mb-4">No posts yet. Create your first post!</p>
@@ -30,7 +40,7 @@ export async function PostsList() {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Your Posts</h2>
+        <h2 className="text-2xl font-bold">Your Posts ({totalPosts})</h2>
         <Link href="/dashboard/posts/new" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
           New Post
         </Link>
@@ -70,6 +80,38 @@ export async function PostsList() {
           </div>
         ))}
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-6">
+          <Link
+            href={`/dashboard?page=${page - 1}`}
+            className={`px-4 py-2 border rounded-md ${
+              page <= 1
+                ? "pointer-events-none opacity-50 bg-gray-100 text-gray-400"
+                : "bg-white text-gray-700 hover:bg-gray-50"
+            }`}
+            aria-disabled={page <= 1}
+          >
+            Previous
+          </Link>
+
+          <span className="px-4 py-2 text-sm text-gray-600">
+            Page {page} of {totalPages}
+          </span>
+
+          <Link
+            href={`/dashboard?page=${page + 1}`}
+            className={`px-4 py-2 border rounded-md ${
+              page >= totalPages
+                ? "pointer-events-none opacity-50 bg-gray-100 text-gray-400"
+                : "bg-white text-gray-700 hover:bg-gray-50"
+            }`}
+            aria-disabled={page >= totalPages}
+          >
+            Next
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

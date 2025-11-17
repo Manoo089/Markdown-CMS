@@ -3,8 +3,14 @@ import { LogoutButton } from "./LogoutButton";
 import { PostsList } from "./posts-list";
 import { Suspense } from "react";
 
-export default async function DashboardPage() {
+interface Props {
+  searchParams: Promise<{ page?: string }>;
+}
+
+export default async function DashboardPage({ searchParams }: Props) {
   const session = await requireAuth();
+  const params = await searchParams;
+  const page = Number(params.page) || 1;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -22,7 +28,7 @@ export default async function DashboardPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Suspense fallback={<div>Loading posts...</div>}>
-          <PostsList />
+          <PostsList page={page} />
         </Suspense>
       </main>
     </div>
