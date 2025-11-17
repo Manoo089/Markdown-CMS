@@ -16,6 +16,7 @@ export function PostForm({ userId }: Props) {
   const [manualSlug, setManualSlug] = useState("");
   const [content, setContent] = useState("");
   const [excerpt, setExcerpt] = useState("");
+  const [type, setType] = useState("post");
   const [published, setPublished] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -33,6 +34,7 @@ export function PostForm({ userId }: Props) {
       slug,
       content,
       excerpt: excerpt || undefined,
+      type,
       published,
       authorId: userId,
     });
@@ -62,6 +64,27 @@ export function PostForm({ userId }: Props) {
           required
           className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
+      </div>
+
+      <div>
+        <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-2">
+          Content Type
+        </label>
+        <select
+          id="type"
+          value={type}
+          onChange={(e) => setType(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        >
+          <option value="post">Blog Post</option>
+          <option value="page">Page</option>
+          <option value="service">Service</option>
+        </select>
+        <p className="text-xs text-gray-500 mt-1">
+          {type === "post" && "Regular blog post for /blog"}
+          {type === "page" && "Static page content (e.g., homepage sections)"}
+          {type === "service" && "Service offering for homepage"}
+        </p>
       </div>
 
       <div>

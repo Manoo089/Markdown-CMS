@@ -9,6 +9,7 @@ type UpdatePostInput = {
   slug: string;
   content: string;
   excerpt?: string;
+  type: string;
   published: boolean;
 };
 
@@ -31,6 +32,7 @@ export async function updatePost(data: UpdatePostInput) {
         slug: data.slug,
         content: data.content,
         excerpt: data.excerpt || null,
+        type: data.type,
         published: data.published,
         publishedAt:
           data.published && !existingPost?.published

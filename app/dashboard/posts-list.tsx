@@ -58,6 +58,23 @@ export async function PostsList({ page = 1 }: Props) {
                   <span>•</span>
                   <span>{new Date(post.createdAt).toLocaleDateString()}</span>
                   <span>•</span>
+
+                  {/* Type Badge */}
+                  <span
+                    className={`px-2 py-1 rounded text-xs font-medium ${
+                      post.type === "service"
+                        ? "bg-purple-100 text-purple-800"
+                        : post.type === "page"
+                        ? "bg-blue-100 text-blue-800"
+                        : "bg-gray-100 text-gray-800"
+                    }`}
+                  >
+                    {post.type}
+                  </span>
+
+                  <span>•</span>
+
+                  {/* Published/Draft Badge */}
                   <span
                     className={`px-2 py-1 rounded text-xs font-medium ${
                       post.published ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"

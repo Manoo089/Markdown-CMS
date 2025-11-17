@@ -8,6 +8,7 @@ type CreatePostInput = {
   slug: string;
   content: string;
   excerpt?: string;
+  type: string;
   published: boolean;
   authorId: string;
 };
@@ -30,6 +31,7 @@ export async function createPost(data: CreatePostInput) {
         slug: data.slug,
         content: data.content,
         excerpt: data.excerpt || null,
+        type: data.type,
         published: data.published,
         publishedAt: data.published ? new Date() : null,
         authorId: data.authorId,
@@ -38,6 +40,7 @@ export async function createPost(data: CreatePostInput) {
 
     // 3. Cache invalidieren (wichtig für ISR/SSG später)
     revalidatePath("/dashboard");
+    revalidatePath("/");
 
     return { success: true, postId: post.id };
   } catch (error) {
