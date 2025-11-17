@@ -1,5 +1,7 @@
 import { requireAuth } from "@/lib/auth-utils";
 import { LogoutButton } from "./LogoutButton";
+import { PostsList } from "./posts-list";
+import { Suspense } from "react";
 
 export default async function DashboardPage() {
   const session = await requireAuth();
@@ -19,10 +21,9 @@ export default async function DashboardPage() {
       </nav>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-2xl font-bold mb-4">Welcome, {session?.user?.name || session?.user?.email}!</h2>
-          <p className="text-gray-600">You are successfully logged in. 🎉</p>
-        </div>
+        <Suspense fallback={<div>Loading posts...</div>}>
+          <PostsList />
+        </Suspense>
       </main>
     </div>
   );
