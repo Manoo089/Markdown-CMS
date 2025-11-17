@@ -72,6 +72,7 @@ model Post {
   slug        String    @unique
   content     String    @db.Text
   excerpt     String?
+  type        String    @default("post")
   published   Boolean   @default(false)
   publishedAt DateTime?
   author      User      @relation(fields: [authorId], references: [id])
