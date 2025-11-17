@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { createPost } from "./actions";
+import { generateSlug } from "@/lib/slug-utils";
 
 interface Props {
   userId: string;
@@ -10,13 +11,16 @@ interface Props {
 
 export function PostForm({ userId }: Props) {
   const router = useRouter();
+
   const [title, setTitle] = useState<string>("");
-  const [slug, setSlug] = useState("");
+  const [manualSlug, setManualSlug] = useState("");
   const [content, setContent] = useState<string>("");
   const [excerpt, setExcerpt] = useState<string>("");
   const [published, setPublished] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState("");
+
+  const slug = manualSlug || generateSlug(title);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,9 +37,9 @@ export function PostForm({ userId }: Props) {
     });
 
     if (result.error) {
-        setError(result.error);
-        setIsSubmitting(false);
-        return;
+      setError(result.error);
+      setIsSubmitting(false);
+      return;
     }
 
     router.push("/dashboard");
@@ -58,7 +62,7 @@ export function PostForm({ userId }: Props) {
         type="text"
         name="slug"
         value={slug}
-        onChange={(e) => setSlug(e.target.value)}
+        onChange={(e) => setManualSlug(e.target.value)}
         placeholder="Slug"
         required
       />
