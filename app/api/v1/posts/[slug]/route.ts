@@ -8,19 +8,28 @@ interface Props {
 }
 
 // Handle OPTIONS preflight
-export async function OPTIONS() {
-  return handleOptions();
+export async function OPTIONS(request: NextRequest) {
+  const auth = await validateApiKey(request);
+  const origin = request.headers.get("origin") || undefined;
+
+  if ("error" in auth) {
+    return handleOptions(origin, "*");
+  }
+
+  return handleOptions(origin, auth.settings?.allowedOrigins);
 }
 
 export async function GET(request: NextRequest, { params }: Props) {
+  const origin = request.headers.get("origin") || undefined;
+
   // Auth
   const auth = await validateApiKey(request);
 
   if ("error" in auth) {
-    return NextResponse.json({ error: auth.error }, { status: auth.status });
+    return withCors(NextResponse.json({ error: auth.error }, { status: auth.status }), origin, "*");
   }
 
-  const { organization } = auth;
+  const { organization, settings } = auth;
   const { slug } = await params;
 
   // Fetch post
@@ -52,8 +61,8 @@ export async function GET(request: NextRequest, { params }: Props) {
   });
 
   if (!post) {
-    return withCors(NextResponse.json({ error: "Post not found" }, { status: 404 }));
+    return withCors(NextResponse.json({ error: "Post not found" }, { status: 404 }), origin, settings?.allowedOrigins);
   }
 
-  return withCors(NextResponse.json({ data: post }));
+  return withCors(NextResponse.json({ data: post }), origin, settings?.allowedOrigins);
 }

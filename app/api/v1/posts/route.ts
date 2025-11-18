@@ -3,19 +3,33 @@ import { prisma } from "@/lib/prisma";
 import { validateApiKey } from "@/lib/api-auth";
 import { withCors, handleOptions } from "@/lib/api-cors";
 
-export async function OPTIONS() {
-  return handleOptions();
+export async function OPTIONS(request: NextRequest) {
+  // Für OPTIONS brauchen wir auch den API Key um die Settings zu bekommen
+  const auth = await validateApiKey(request);
+  const origin = request.headers.get("origin") || undefined;
+
+  if ("error" in auth) {
+    return handleOptions(origin, "*"); // Fallback
+  }
+
+  return handleOptions(origin, auth.settings?.allowedOrigins);
 }
 
 export async function GET(request: NextRequest) {
+  const origin = request.headers.get("origin") || undefined;
+
   // Auth
   const auth = await validateApiKey(request);
 
   if ("error" in auth) {
-    return NextResponse.json({ error: auth.error }, { status: auth.status });
+    return withCors(
+      NextResponse.json({ error: auth.error }, { status: auth.status }),
+      origin,
+      "*" // Bei Auth-Fehler Wildcard
+    );
   }
 
-  const { organization } = auth;
+  const { organization, settings } = auth;
 
   // Query Parameters
   const { searchParams } = new URL(request.url);
@@ -75,6 +89,8 @@ export async function GET(request: NextRequest) {
         limit,
         offset,
       },
-    })
+    }),
+    origin,
+    settings?.allowedOrigins
   );
 }

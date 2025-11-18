@@ -12,6 +12,7 @@ interface Props {
     seoTitleTemplate: string;
     seoDefaultDescription: string | null;
     ogImageUrl: string | null;
+    allowedOrigins: string | null;
   } | null;
 }
 
@@ -25,6 +26,7 @@ export function SettingsForm({ settings }: Props) {
   const [seoTitleTemplate, setSeoTitleTemplate] = useState(settings?.seoTitleTemplate || "%s | My Website");
   const [seoDefaultDescription, setSeoDefaultDescription] = useState(settings?.seoDefaultDescription || "");
   const [ogImageUrl, setOgImageUrl] = useState(settings?.ogImageUrl || "");
+  const [allowedOrigins, setAllowedOrigins] = useState(settings?.allowedOrigins || "");
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -43,6 +45,7 @@ export function SettingsForm({ settings }: Props) {
       seoTitleTemplate,
       seoDefaultDescription: seoDefaultDescription || undefined,
       ogImageUrl: ogImageUrl || undefined,
+      allowedOrigins: allowedOrigins || undefined,
     });
 
     if (result.error) {
@@ -155,6 +158,29 @@ export function SettingsForm({ settings }: Props) {
             />
             <p className="text-xs text-gray-500 mt-1">
               Image shown when sharing on social media (recommended: 1200x630px)
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* API Settings */}
+      <div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">API Settings</h3>
+        <div className="space-y-4">
+          <div>
+            <label htmlFor="allowedOrigins" className="block text-sm font-medium text-gray-700 mb-2">
+              Allowed Origins (CORS)
+            </label>
+            <input
+              id="allowedOrigins"
+              type="text"
+              value={allowedOrigins}
+              onChange={(e) => setAllowedOrigins(e.target.value)}
+              placeholder="https://example.com, https://app.example.com"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Comma-separated list of domains that can access your API. Use * for all domains.
             </p>
           </div>
         </div>

@@ -11,6 +11,7 @@ type UpdateSettingsInput = {
   seoTitleTemplate: string;
   seoDefaultDescription?: string;
   ogImageUrl?: string;
+  allowedOrigins?: string;
 };
 
 export async function updateSettings(data: UpdateSettingsInput) {
@@ -33,6 +34,7 @@ export async function updateSettings(data: UpdateSettingsInput) {
         seoTitleTemplate: data.seoTitleTemplate,
         seoDefaultDescription: data.seoDefaultDescription || null,
         ogImageUrl: data.ogImageUrl || null,
+        allowedOrigins: data.allowedOrigins || null,
       },
       create: {
         organizationId,
@@ -42,6 +44,7 @@ export async function updateSettings(data: UpdateSettingsInput) {
         seoTitleTemplate: data.seoTitleTemplate,
         seoDefaultDescription: data.seoDefaultDescription || null,
         ogImageUrl: data.ogImageUrl || null,
+        allowedOrigins: data.allowedOrigins || null,
       },
     });
 

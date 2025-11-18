@@ -103,6 +103,9 @@ model SiteSettings {
   seoTitleTemplate String  @default("%s | My Website")
   seoDefaultDescription String?
   ogImageUrl      String?
+
+  // API Settings
+  allowedOrigins  String?  // Komma-separierte Liste: "https://site1.com,https://site2.com"
   
   // Relation
   organizationId  String   @unique

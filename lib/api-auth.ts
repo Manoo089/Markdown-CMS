@@ -13,7 +13,11 @@ export async function validateApiKey(request: NextRequest) {
   const apiKey = await prisma.apiKey.findUnique({
     where: { key },
     include: {
-      organization: true,
+      organization: {
+        include: {
+          settings: true,
+        },
+      },
     },
   });
 
@@ -27,5 +31,8 @@ export async function validateApiKey(request: NextRequest) {
     data: { lastUsedAt: new Date() },
   });
 
-  return { organization: apiKey.organization };
+  return {
+    organization: apiKey.organization,
+    settings: apiKey.organization.settings,
+  };
 }
