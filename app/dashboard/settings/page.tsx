@@ -1,7 +1,9 @@
 import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@/lib/prisma";
-import { SettingsForm } from "./settings-form";
 import Link from "next/link";
+
+import { SettingsForm } from "./settings-form";
+import { ApiKeys } from "./api-keys";
 
 export default async function SettingsPage() {
   const session = await requireAuth();
@@ -9,6 +11,18 @@ export default async function SettingsPage() {
   // Settings für diese Organization laden
   const settings = await prisma.siteSettings.findUnique({
     where: { organizationId: session.user.organizationId },
+  });
+
+  // API Keys laden
+  const apiKeys = await prisma.apiKey.findMany({
+    where: { organizationId: session.user.organizationId },
+    orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      name: true,
+      createdAt: true,
+      lastUsedAt: true,
+    },
   });
 
   return (
@@ -32,6 +46,7 @@ export default async function SettingsPage() {
         </div>
 
         <SettingsForm settings={settings} />
+        <ApiKeys apiKeys={apiKeys} />
       </main>
     </div>
   );
