@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { validateApiKey } from "@/lib/api-auth";
+import { withCors, handleOptions } from "@/lib/api-cors";
 
 interface Props {
   params: Promise<{ slug: string }>;
+}
+
+// Handle OPTIONS preflight
+export async function OPTIONS() {
+  return handleOptions();
 }
 
 export async function GET(request: NextRequest, { params }: Props) {
@@ -46,8 +52,8 @@ export async function GET(request: NextRequest, { params }: Props) {
   });
 
   if (!post) {
-    return NextResponse.json({ error: "Post not found" }, { status: 404 });
+    return withCors(NextResponse.json({ error: "Post not found" }, { status: 404 }));
   }
 
-  return NextResponse.json({ data: post });
+  return withCors(NextResponse.json({ data: post }));
 }

@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { validateApiKey } from "@/lib/api-auth";
+import { withCors, handleOptions } from "@/lib/api-cors";
+
+export async function OPTIONS() {
+  return handleOptions();
+}
 
 export async function GET(request: NextRequest) {
   // Auth
@@ -20,6 +25,7 @@ export async function GET(request: NextRequest) {
   const offset = parseInt(searchParams.get("offset") || "0");
 
   // Build where clause
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const where: any = {
     organizationId: organization.id,
   };
@@ -61,12 +67,14 @@ export async function GET(request: NextRequest) {
     prisma.post.count({ where }),
   ]);
 
-  return NextResponse.json({
-    data: posts,
-    meta: {
-      total,
-      limit,
-      offset,
-    },
-  });
+  return withCors(
+    NextResponse.json({
+      data: posts,
+      meta: {
+        total,
+        limit,
+        offset,
+      },
+    })
+  );
 }

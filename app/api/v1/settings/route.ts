@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { validateApiKey } from "@/lib/api-auth";
+import { withCors, handleOptions } from "@/lib/api-cors";
+
+// Handle OPTIONS preflight
+export async function OPTIONS() {
+  return handleOptions();
+}
 
 export async function GET(request: NextRequest) {
   // Auth
@@ -26,17 +32,19 @@ export async function GET(request: NextRequest) {
   });
 
   if (!settings) {
-    return NextResponse.json({ error: "Settings not found" }, { status: 404 });
+    return withCors(NextResponse.json({ error: "Settings not found" }, { status: 404 }));
   }
 
-  return NextResponse.json({
-    data: {
-      organization: {
-        id: organization.id,
-        name: organization.name,
-        slug: organization.slug,
+  return withCors(
+    NextResponse.json({
+      data: {
+        organization: {
+          id: organization.id,
+          name: organization.name,
+          slug: organization.slug,
+        },
+        settings,
       },
-      settings,
-    },
-  });
+    })
+  );
 }
