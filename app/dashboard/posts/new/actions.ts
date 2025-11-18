@@ -11,13 +11,19 @@ type CreatePostInput = {
   type: string;
   published: boolean;
   authorId: string;
+  organizationId: string;
 };
 
 export async function createPost(data: CreatePostInput) {
   try {
     // 1. Prüfe ob Slug bereits existiert
     const existingPost = await prisma.post.findUnique({
-      where: { slug: data.slug },
+      where: {
+        organizationId_slug: {
+          organizationId: data.organizationId,
+          slug: data.slug,
+        },
+      },
     });
 
     if (existingPost) {
@@ -35,6 +41,7 @@ export async function createPost(data: CreatePostInput) {
         published: data.published,
         publishedAt: data.published ? new Date() : null,
         authorId: data.authorId,
+        organizationId: data.organizationId,
       },
     });
 

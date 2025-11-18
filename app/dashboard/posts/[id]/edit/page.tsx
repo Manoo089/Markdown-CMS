@@ -21,9 +21,9 @@ export default async function EditPostPage({ params }: Props) {
     notFound();
   }
 
-  // Nicht der Author → Könnte man auch anders handhaben
-  if (post.authorId !== session.user.id) {
-    notFound(); // oder redirect zu Dashboard mit Error
+  // Post gehört nicht zur Organization des Users → 404
+  if (post.organizationId !== session.user.organizationId) {
+    notFound();
   }
 
   return (
@@ -33,7 +33,7 @@ export default async function EditPostPage({ params }: Props) {
           <h1 className="text-3xl font-bold">Edit Post</h1>
           <p className="text-gray-600 mt-2">Update your content</p>
         </div>
-        <EditPostForm post={post} />
+        <EditPostForm post={post} organizationId={session.user.organizationId} />
       </div>
     </div>
   );

@@ -8,9 +8,10 @@ import { MarkdownPreview } from "@/components/MarkdownPreview";
 
 interface Props {
   userId: string;
+  organizationId: string;
 }
 
-export function PostForm({ userId }: Props) {
+export function PostForm({ userId, organizationId }: Props) {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [manualSlug, setManualSlug] = useState("");
@@ -37,6 +38,7 @@ export function PostForm({ userId }: Props) {
       type,
       published,
       authorId: userId,
+      organizationId,
     });
 
     if (result.error) {

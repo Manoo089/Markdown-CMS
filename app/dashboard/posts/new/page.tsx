@@ -13,7 +13,7 @@ export default async function NewPostPage() {
           <h1 className="text-3xl font-bold">Create New Post</h1>
           <p className="text-gray-600 mt-2">Write your content in Markdown</p>
         </div>
-        <PostForm userId={session?.user?.id} />
+        <PostForm userId={session?.user?.id} organizationId={session.user.organizationId} />
       </div>
     </div>
   );

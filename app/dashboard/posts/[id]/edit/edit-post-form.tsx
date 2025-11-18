@@ -16,9 +16,10 @@ interface Props {
     type: string;
     published: boolean;
   };
+  organizationId: string;
 }
 
-export function EditPostForm({ post }: Props) {
+export function EditPostForm({ post, organizationId }: Props) {
   const router = useRouter();
 
   const [title, setTitle] = useState(post.title);
@@ -46,6 +47,7 @@ export function EditPostForm({ post }: Props) {
       excerpt: excerpt || undefined,
       type,
       published,
+      organizationId,
     });
 
     if (result.error) {

@@ -36,6 +36,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           id: user.id,
           email: user.email,
           name: user.name,
+          organizationId: user.organizationId,
         };
       },
     }),
@@ -51,6 +52,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // Bei Login: user ist verfügbar
       if (user) {
         token.id = user.id;
+        token.organizationId = user.organizationId;
       }
       return token;
     },
@@ -58,6 +60,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // User ID vom Token in Session übernehmen
       if (session.user) {
         session.user.id = token.id as string;
+        session.user.organizationId = token.organizationId as string;
       }
       return session;
     },

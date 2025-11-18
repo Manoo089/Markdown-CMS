@@ -11,13 +11,19 @@ type UpdatePostInput = {
   excerpt?: string;
   type: string;
   published: boolean;
+  organizationId: string;
 };
 
 export async function updatePost(data: UpdatePostInput) {
   try {
     // Prüfe ob Slug bereits von ANDEREM Post genutzt wird
     const existingPost = await prisma.post.findUnique({
-      where: { slug: data.slug },
+      where: {
+        organizationId_slug: {
+          organizationId: data.organizationId,
+          slug: data.slug,
+        },
+      },
     });
 
     if (existingPost && existingPost.id !== data.postId) {

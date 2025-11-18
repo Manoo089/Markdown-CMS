@@ -11,10 +11,13 @@ interface Props {
   status?: string;
   type?: string;
   search?: string;
+  organizationId: string;
 }
 
-export async function PostsList({ page = 1, status = "all", type = "all", search = "" }: Props) {
-  const where: Prisma.PostWhereInput = {};
+export async function PostsList({ page = 1, status = "all", type = "all", search = "", organizationId }: Props) {
+  const where: Prisma.PostWhereInput = {
+    organizationId,
+  };
 
   // Status-Filter
   if (status === "published") {

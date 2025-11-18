@@ -39,7 +39,13 @@ export default async function DashboardPage({ searchParams }: Props) {
         <PostFilters />
 
         <Suspense fallback={<div>Loading posts...</div>}>
-          <PostsList page={page} status={status} type={type} search={search} />
+          <PostsList
+            page={page}
+            status={status}
+            type={type}
+            search={search}
+            organizationId={session.user.organizationId}
+          />
         </Suspense>
       </main>
     </div>
