@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Prisma } from "@prisma/client";
 
 import { DeleteButton } from "./delete-button";
+import { HighlightText } from "./highlight-text";
 import { POSTS_PER_PAGE } from "@/lib/constants";
 
 interface Props {
@@ -91,7 +92,11 @@ export async function PostsList({ page = 1, status = "all", type = "all", search
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <h3 className="text-lg font-semibold mb-1">{post.title}</h3>
-                {post.excerpt && <p className="text-gray-600 text-sm mb-2">{post.excerpt}</p>}
+                {post.excerpt && (
+                  <p className="text-gray-600 text-sm mb-2">
+                    <HighlightText text={post.excerpt} search={search} />
+                  </p>
+                )}
                 <div className="flex items-center gap-4 text-sm text-gray-500">
                   <span>By {post.author.name || post.author.email}</span>
                   <span>•</span>

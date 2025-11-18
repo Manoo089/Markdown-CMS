@@ -70,7 +70,7 @@ export function PostFilters() {
             type="text"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="Search posts..."
+            placeholder="Search posts (Title and Excerpt)"
             className="w-full sm:w-80 px-4 py-2 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           <svg
