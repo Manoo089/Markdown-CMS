@@ -3,6 +3,7 @@ import { LogoutButton } from "./LogoutButton";
 import { PostsList } from "./posts-list";
 import { Suspense } from "react";
 import { PostFilters } from "./post-filters";
+import Link from "next/link";
 
 interface Props {
   searchParams: Promise<{
@@ -28,6 +29,9 @@ export default async function DashboardPage({ searchParams }: Props) {
           <div className="flex justify-between h-16 items-center">
             <h1 className="text-xl font-bold">MDCMS Dashboard</h1>
             <div className="flex items-center gap-4">
+              <Link href="/dashboard/settings" className="text-sm text-gray-600 hover:text-gray-900">
+                Settings
+              </Link>
               <span className="text-sm text-gray-600">{session?.user?.email}</span>
               <LogoutButton />
             </div>
