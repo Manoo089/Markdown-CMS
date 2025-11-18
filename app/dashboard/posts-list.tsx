@@ -1,18 +1,34 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { Prisma } from "@prisma/client";
 
 import { DeleteButton } from "./delete-button";
 import { POSTS_PER_PAGE } from "@/lib/constants";
 
 interface Props {
   page?: number;
+  status?: string;
+  type?: string;
 }
 
-export async function PostsList({ page = 1 }: Props) {
-  const totalPosts = await prisma.post.count();
+export async function PostsList({ page = 1, status = "all", type = "all" }: Props) {
+  const where: Prisma.PostWhereInput = {};
+
+  if (status === "published") {
+    where.published = true;
+  } else if (status === "draft") {
+    where.published = false;
+  }
+
+  if (type !== "all") {
+    where.type = type;
+  }
+
+  const totalPosts = await prisma.post.count({ where });
   const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
 
   const posts = await prisma.post.findMany({
+    where,
     orderBy: { createdAt: "desc" },
     include: {
       author: {
@@ -26,7 +42,11 @@ export async function PostsList({ page = 1 }: Props) {
   if (totalPosts === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500 mb-4">No posts yet. Create your first post!</p>
+        <p className="text-gray-500 mb-4">
+          {status === "all" && type === "all"
+            ? "No posts yet. Create your first post!"
+            : "No posts match your filters."}
+        </p>
         <Link
           href="/dashboard/posts/new"
           className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
@@ -36,6 +56,13 @@ export async function PostsList({ page = 1 }: Props) {
       </div>
     );
   }
+
+  // Aktuelle Filter für Pagination-Links beibehalten
+  const filterParams = new URLSearchParams();
+  if (status !== "all") filterParams.set("status", status);
+  if (type !== "all") filterParams.set("type", type);
+  const filterQuery = filterParams.toString();
+  const filterSuffix = filterQuery ? `&${filterQuery}` : "";
 
   return (
     <div className="space-y-4">
@@ -101,7 +128,7 @@ export async function PostsList({ page = 1 }: Props) {
       {totalPages > 1 && (
         <div className="flex justify-center items-center gap-2 mt-6">
           <Link
-            href={`/dashboard?page=${page - 1}`}
+            href={`/dashboard?page=${page - 1}${filterSuffix}`}
             className={`px-4 py-2 border rounded-md ${
               page <= 1
                 ? "pointer-events-none opacity-50 bg-gray-100 text-gray-400"
@@ -117,7 +144,7 @@ export async function PostsList({ page = 1 }: Props) {
           </span>
 
           <Link
-            href={`/dashboard?page=${page + 1}`}
+            href={`/dashboard?page=${page + 1}${filterSuffix}`}
             className={`px-4 py-2 border rounded-md ${
               page >= totalPages
                 ? "pointer-events-none opacity-50 bg-gray-100 text-gray-400"

@@ -2,15 +2,18 @@ import { requireAuth } from "@/lib/auth-utils";
 import { LogoutButton } from "./LogoutButton";
 import { PostsList } from "./posts-list";
 import { Suspense } from "react";
+import { PostFilters } from "./post-filters";
 
 interface Props {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string; status?: string; type?: string }>;
 }
 
 export default async function DashboardPage({ searchParams }: Props) {
   const session = await requireAuth();
   const params = await searchParams;
   const page = Number(params.page) || 1;
+  const status = params.status || "all";
+  const type = params.type || "all";
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -27,8 +30,10 @@ export default async function DashboardPage({ searchParams }: Props) {
       </nav>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <PostFilters />
+
         <Suspense fallback={<div>Loading posts...</div>}>
-          <PostsList page={page} />
+          <PostsList page={page} status={status} type={type} />
         </Suspense>
       </main>
     </div>
