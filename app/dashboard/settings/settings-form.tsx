@@ -7,7 +7,6 @@ import { updateSettings } from "./actions";
 interface Props {
   settings: {
     siteTitle: string;
-    siteDescription: string | null;
     faviconUrl: string | null;
     logoUrl: string | null;
     seoTitleTemplate: string;
@@ -21,7 +20,6 @@ export function SettingsForm({ settings }: Props) {
 
   // Form State mit Defaults
   const [siteTitle, setSiteTitle] = useState(settings?.siteTitle || "My Website");
-  const [siteDescription, setSiteDescription] = useState(settings?.siteDescription || "");
   const [faviconUrl, setFaviconUrl] = useState(settings?.faviconUrl || "");
   const [logoUrl, setLogoUrl] = useState(settings?.logoUrl || "");
   const [seoTitleTemplate, setSeoTitleTemplate] = useState(settings?.seoTitleTemplate || "%s | My Website");
@@ -40,7 +38,6 @@ export function SettingsForm({ settings }: Props) {
 
     const result = await updateSettings({
       siteTitle,
-      siteDescription: siteDescription || undefined,
       faviconUrl: faviconUrl || undefined,
       logoUrl: logoUrl || undefined,
       seoTitleTemplate,
@@ -75,19 +72,6 @@ export function SettingsForm({ settings }: Props) {
               value={siteTitle}
               onChange={(e) => setSiteTitle(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="siteDescription" className="block text-sm font-medium text-gray-700 mb-2">
-              Site Description
-            </label>
-            <textarea
-              id="siteDescription"
-              value={siteDescription}
-              onChange={(e) => setSiteDescription(e.target.value)}
-              rows={3}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>

@@ -6,7 +6,6 @@ import { auth } from "@/lib/auth";
 
 type UpdateSettingsInput = {
   siteTitle: string;
-  siteDescription?: string;
   faviconUrl?: string;
   logoUrl?: string;
   seoTitleTemplate: string;
@@ -29,7 +28,6 @@ export async function updateSettings(data: UpdateSettingsInput) {
       where: { organizationId },
       update: {
         siteTitle: data.siteTitle,
-        siteDescription: data.siteDescription || null,
         faviconUrl: data.faviconUrl || null,
         logoUrl: data.logoUrl || null,
         seoTitleTemplate: data.seoTitleTemplate,
@@ -39,7 +37,6 @@ export async function updateSettings(data: UpdateSettingsInput) {
       create: {
         organizationId,
         siteTitle: data.siteTitle,
-        siteDescription: data.siteDescription || null,
         faviconUrl: data.faviconUrl || null,
         logoUrl: data.logoUrl || null,
         seoTitleTemplate: data.seoTitleTemplate,

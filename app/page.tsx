@@ -1,25 +1,52 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { MarkdownPreview } from "@/components/MarkdownPreview";
+import { getPublicSettings } from "@/lib/settings";
 
-export const metadata = {
-  title: "Hohenadl Development | Web Development & CMS Solutions",
-  description: "Professional web development services specializing in modern, fast, and scalable web applications.",
-};
+export async function generateMetadata() {
+  const data = await getPublicSettings();
+
+  if (!data?.settings) {
+    return {
+      title: "Website",
+      description: "Welcome to our website",
+    };
+  }
+
+  const { settings } = data;
+
+  return {
+    title: settings.siteTitle,
+    description: settings.seoDefaultDescription || undefined,
+    openGraph: {
+      title: settings.siteTitle,
+      description: settings.seoDefaultDescription || undefined,
+      images: settings.ogImageUrl ? [settings.ogImageUrl] : undefined,
+    },
+    icons: settings.faviconUrl ? { icon: settings.faviconUrl } : undefined,
+  };
+}
 
 export default async function HomePage() {
+  const data = await getPublicSettings();
+
+  if (!data) {
+    return <div>No organization found</div>;
+  }
+
+  const { organizationId, settings } = data;
   // Fetch CMS Content
   const heroContent = await prisma.post.findFirst({
-    where: { slug: "homepage-hero", type: "page", published: true },
+    where: { slug: "homepage-hero", type: "page", published: true, organizationId },
   });
 
   const services = await prisma.post.findMany({
-    where: { type: "service", published: true },
+    where: { type: "service", published: true, organizationId },
     orderBy: { createdAt: "asc" },
   });
 
   const latestPosts = await prisma.post.findMany({
-    where: { published: true, type: "post" }, // ← Nur Blog-Posts
+    where: { published: true, type: "post", organizationId }, // ← Nur Blog-Posts
     orderBy: { publishedAt: "desc" },
     take: 3,
     select: {
@@ -30,9 +57,9 @@ export default async function HomePage() {
     },
   });
 
-  // Fallbacks
-  const heroTitle = heroContent?.title || "Hohenadl Development";
-  const heroSubtitle = heroContent?.excerpt || "Web Development & CMS Solutions";
+  // Fallbacks mit Settings
+  const heroTitle = heroContent?.title || settings?.siteTitle || "Welcome";
+  const heroSubtitle = heroContent?.excerpt || ""; // Nur vom Post, kein Settings-Fallback
   const heroDescription = heroContent?.content || "Professional web development services.";
 
   return (
@@ -42,12 +69,9 @@ export default async function HomePage() {
         <div className="text-center mb-16">
           {/* Logo/Brand - CMS Driven */}
           <div className="mb-8">
-            <h1 className="text-6xl font-bold text-gray-900 mb-2">
-              {heroTitle}
-            </h1>
-            <p className="text-xl text-blue-600 font-medium">
-              {heroSubtitle}
-            </p>
+            {settings?.logoUrl && <img src={settings.logoUrl} alt={settings.siteTitle} className="h-16 mx-auto mb-4" />}
+            <h1 className="text-6xl font-bold text-gray-900 mb-2">{heroTitle}</h1>
+            <p className="text-xl text-blue-600 font-medium">{heroSubtitle}</p>
           </div>
 
           <div className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed prose prose-lg">
@@ -72,9 +96,7 @@ export default async function HomePage() {
 
         {/* Services Section - CMS Driven */}
         <div id="services" className="mt-32">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4 text-center">
-            What I Offer
-          </h2>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4 text-center">What I Offer</h2>
           <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
             Professional web development services for businesses that want to stand out online
           </p>
@@ -83,7 +105,7 @@ export default async function HomePage() {
             {services.map((service, index) => {
               // Icon mapping (könnte später auch aus DB kommen)
               const icons = ["🚀", "📝", "💼"];
-              
+
               return (
                 <div key={service.id} className="bg-white rounded-lg p-8 shadow-lg hover:shadow-xl transition">
                   <div className="text-5xl mb-4">{icons[index] || "✨"}</div>
@@ -99,12 +121,8 @@ export default async function HomePage() {
 
         {/* Tech Stack - bleibt hardcoded (Design-Element) */}
         <div className="mt-32">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4 text-center">
-            Technology Stack
-          </h2>
-          <p className="text-center text-gray-600 mb-12">
-            Built with modern, production-ready technologies
-          </p>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4 text-center">Technology Stack</h2>
+          <p className="text-center text-gray-600 mb-12">Built with modern, production-ready technologies</p>
 
           <div className="grid md:grid-cols-4 gap-6">
             {[
@@ -128,9 +146,7 @@ export default async function HomePage() {
         {/* Blog Section */}
         {latestPosts.length > 0 && (
           <div className="mt-32">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4 text-center">
-              Latest Articles
-            </h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4 text-center">Latest Articles</h2>
             <p className="text-center text-gray-600 mb-12">
               Insights on web development, best practices, and technical tutorials
             </p>
@@ -142,14 +158,8 @@ export default async function HomePage() {
                   href={`/blog/${post.slug}`}
                   className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition"
                 >
-                  <h3 className="text-xl font-bold text-gray-900 mb-2 hover:text-blue-600">
-                    {post.title}
-                  </h3>
-                  {post.excerpt && (
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                      {post.excerpt}
-                    </p>
-                  )}
+                  <h3 className="text-xl font-bold text-gray-900 mb-2 hover:text-blue-600">{post.title}</h3>
+                  {post.excerpt && <p className="text-gray-600 text-sm mb-4 line-clamp-3">{post.excerpt}</p>}
                   <div className="text-sm text-gray-500">
                     {post.publishedAt?.toLocaleDateString("en-US", {
                       month: "short",
@@ -161,10 +171,7 @@ export default async function HomePage() {
               ))}
             </div>
             <div className="text-center mt-8">
-              <Link
-                href="/blog"
-                className="text-blue-600 hover:text-blue-800 font-medium text-lg"
-              >
+              <Link href="/blog" className="text-blue-600 hover:text-blue-800 font-medium text-lg">
                 View all articles →
               </Link>
             </div>
@@ -173,15 +180,13 @@ export default async function HomePage() {
 
         {/* CTA Section */}
         <div className="mt-32 bg-linear-to-r from-blue-600 to-indigo-600 rounded-2xl p-12 text-center text-white shadow-2xl">
-          <h2 className="text-4xl font-bold mb-4">
-            Ready to start your project?
-          </h2>
+          <h2 className="text-4xl font-bold mb-4">Ready to start your project?</h2>
           <p className="text-xl mb-8 opacity-90">
             Let&apos;s build something amazing together. Professional web development for your business.
           </p>
           <div className="flex gap-4 justify-center">
-            
-              <a href="mailto:kontakt@hohenadl.dev"
+            <a
+              href="mailto:kontakt@hohenadl.dev"
               className="px-8 py-3 bg-white text-blue-600 rounded-lg font-semibold hover:bg-gray-100 transition"
             >
               Get in Touch
@@ -209,9 +214,21 @@ export default async function HomePage() {
             <div>
               <h4 className="font-semibold mb-4">Quick Links</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><Link href="/#services" className="hover:text-white">Services</Link></li>
-                <li><Link href="/blog" className="hover:text-white">Blog</Link></li>
-                <li><Link href="/dashboard" className="hover:text-white">Dashboard</Link></li>
+                <li>
+                  <Link href="/#services" className="hover:text-white">
+                    Services
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/blog" className="hover:text-white">
+                    Blog
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/dashboard" className="hover:text-white">
+                    Dashboard
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>

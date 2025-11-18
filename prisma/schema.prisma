@@ -95,7 +95,6 @@ model SiteSettings {
   
   // Core Settings
   siteTitle       String   @default("My Website")
-  siteDescription String?
   faviconUrl      String?
   logoUrl         String?
   
