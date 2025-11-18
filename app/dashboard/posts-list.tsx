@@ -9,19 +9,31 @@ interface Props {
   page?: number;
   status?: string;
   type?: string;
+  search?: string;
 }
 
-export async function PostsList({ page = 1, status = "all", type = "all" }: Props) {
+export async function PostsList({ page = 1, status = "all", type = "all", search = "" }: Props) {
   const where: Prisma.PostWhereInput = {};
 
+  // Status-Filter
   if (status === "published") {
     where.published = true;
   } else if (status === "draft") {
     where.published = false;
   }
 
+  // Type-Filter
   if (type !== "all") {
     where.type = type;
+  }
+
+  // Search-Filter
+  if (search) {
+    where.OR = [
+      { title: { contains: search, mode: "insensitive" } },
+      { content: { contains: search, mode: "insensitive" } },
+      { excerpt: { contains: search, mode: "insensitive" } },
+    ];
   }
 
   const totalPosts = await prisma.post.count({ where });

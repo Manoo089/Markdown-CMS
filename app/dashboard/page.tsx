@@ -5,7 +5,12 @@ import { Suspense } from "react";
 import { PostFilters } from "./post-filters";
 
 interface Props {
-  searchParams: Promise<{ page?: string; status?: string; type?: string }>;
+  searchParams: Promise<{
+    page?: string;
+    status?: string;
+    type?: string;
+    search?: string;
+  }>;
 }
 
 export default async function DashboardPage({ searchParams }: Props) {
@@ -14,6 +19,7 @@ export default async function DashboardPage({ searchParams }: Props) {
   const page = Number(params.page) || 1;
   const status = params.status || "all";
   const type = params.type || "all";
+  const search = params.search || "";
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -33,7 +39,7 @@ export default async function DashboardPage({ searchParams }: Props) {
         <PostFilters />
 
         <Suspense fallback={<div>Loading posts...</div>}>
-          <PostsList page={page} status={status} type={type} />
+          <PostsList page={page} status={status} type={type} search={search} />
         </Suspense>
       </main>
     </div>
