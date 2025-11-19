@@ -1,9 +1,9 @@
 import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@/lib/prisma";
-import Link from "next/link";
 
 import { SettingsForm } from "./settings-form";
 import { ApiKeys } from "./api-keys";
+import Button from "@/ui/Button";
 
 export default async function SettingsPage() {
   const session = await requireAuth();
@@ -31,9 +31,7 @@ export default async function SettingsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center gap-4">
-              <Link href="/dashboard" className="text-gray-600 hover:text-gray-900">
-                ← Back to Dashboard
-              </Link>
+              <Button href="/dashboard" label="← Back to Dashboard" variant="plain" color="secondary" />
             </div>
           </div>
         </div>

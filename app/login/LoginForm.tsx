@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@/ui/Button";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 
@@ -49,13 +50,7 @@ export default function LoginForm() {
         required
         className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
       />
-      <button
-        type="submit"
-        disabled={isSigningIn}
-        className="w-full px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-      >
-        {isSigningIn ? "Signing in..." : "Sign In"}
-      </button>
+      <Button type="submit" disabled={isSigningIn} label={isSigningIn ? "Signing in..." : "Sign In"} fullWidth />
 
       {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
     </form>

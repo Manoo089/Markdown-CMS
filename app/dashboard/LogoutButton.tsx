@@ -1,14 +1,8 @@
 "use client";
 
 import { handleSignOut } from "./actions";
+import Button from "@/ui/Button";
 
 export function LogoutButton() {
-  return (
-    <button
-      onClick={() => handleSignOut()}
-      className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
-    >
-      Logout
-    </button>
-  );
+  return <Button type="button" onClick={() => handleSignOut()} label="Logout" color="danger" />;
 }

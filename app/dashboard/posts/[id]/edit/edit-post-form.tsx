@@ -5,6 +5,7 @@ import { useState } from "react";
 import { generateSlug } from "@/lib/slug-utils";
 import { updatePost } from "./actions";
 import { MarkdownPreview } from "@/components/MarkdownPreview";
+import Button from "@/ui/Button";
 
 interface Props {
   post: {
@@ -171,13 +172,11 @@ export function EditPostForm({ post, organizationId }: Props) {
       {error && <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-md">{error}</div>}
 
       <div className="flex gap-4">
-        <button
+        <Button
           type="submit"
+          label={isSubmitting ? "Updating..." : "Update Post"}
           disabled={isSubmitting}
-          className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isSubmitting ? "Updating..." : "Update Post"}
-        </button>
+        />
         <button
           type="button"
           onClick={() => router.push("/dashboard")}

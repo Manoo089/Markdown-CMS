@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createPost } from "./actions";
 import { generateSlug } from "@/lib/slug-utils";
 import { MarkdownPreview } from "@/components/MarkdownPreview";
+import Button from "@/ui/Button";
 
 interface Props {
   userId: string;
@@ -168,20 +169,15 @@ export function PostForm({ userId, organizationId }: Props) {
       {error && <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-md">{error}</div>}
 
       <div className="flex gap-4">
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isSubmitting ? "Saving..." : "Save Post"}
-        </button>
-        <button
+        <Button type="submit" disabled={isSubmitting} label={isSubmitting ? "Saving..." : "Save Post"} />
+
+        <Button
           type="button"
+          label="Cancel"
           onClick={() => router.push("/dashboard")}
-          className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
-        >
-          Cancel
-        </button>
+          variant="outline"
+          color="secondary"
+        />
       </div>
     </form>
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@/ui/Button";
 import { deletePost } from "./actions";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -34,12 +35,14 @@ export function DeleteButton({ postId, postTitle }: Props) {
   };
 
   return (
-    <button
+    <Button
+      type="button"
       onClick={handleDelete}
       disabled={isDeleting}
-      className="text-red-600 hover:text-red-800 text-sm font-medium disabled:opacity-50"
-    >
-      {isDeleting ? "Deleting..." : "Delete"}
-    </button>
+      label={isDeleting ? "Deleting..." : "Delete"}
+      variant="plain"
+      color="danger"
+      className="text-sm"
+    />
   );
 }

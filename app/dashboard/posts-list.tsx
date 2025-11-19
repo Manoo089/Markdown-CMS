@@ -1,10 +1,10 @@
 import { prisma } from "@/lib/prisma";
-import Link from "next/link";
 import { Prisma } from "@prisma/client";
 
 import { DeleteButton } from "./delete-button";
 import { HighlightText } from "./highlight-text";
 import { POSTS_PER_PAGE } from "@/lib/constants";
+import Button from "@/ui/Button";
 
 interface Props {
   page?: number;
@@ -63,12 +63,7 @@ export async function PostsList({ page = 1, status = "all", type = "all", search
             ? "No posts yet. Create your first post!"
             : "No posts match your filters."}
         </p>
-        <Link
-          href="/dashboard/posts/new"
-          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-        >
-          Create Post
-        </Link>
+        <Button href="/dashboard/posts/new" label="Create Post" />
       </div>
     );
   }
@@ -84,9 +79,7 @@ export async function PostsList({ page = 1, status = "all", type = "all", search
     <div className="space-y-4">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Your Posts ({totalPosts})</h2>
-        <Link href="/dashboard/posts/new" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-          New Post
-        </Link>
+        <Button href="/dashboard/posts/new" label="New Post" />
       </div>
 
       <div className="bg-white rounded-lg shadow divide-y">
@@ -132,12 +125,7 @@ export async function PostsList({ page = 1, status = "all", type = "all", search
                 </div>
               </div>
               <div className="ml-4 flex gap-3">
-                <Link
-                  href={`/dashboard/posts/${post.id}/edit`}
-                  className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                >
-                  Edit
-                </Link>
+                <Button href={`/dashboard/posts/${post.id}/edit`} variant="plain" label="Edit" className="text-sm" />
                 <DeleteButton postId={post.id} postTitle={post.title} />
               </div>
             </div>
@@ -147,33 +135,25 @@ export async function PostsList({ page = 1, status = "all", type = "all", search
 
       {totalPages > 1 && (
         <div className="flex justify-center items-center gap-2 mt-6">
-          <Link
+          <Button
             href={`/dashboard?page=${page - 1}${filterSuffix}`}
-            className={`px-4 py-2 border rounded-md ${
-              page <= 1
-                ? "pointer-events-none opacity-50 bg-gray-100 text-gray-400"
-                : "bg-white text-gray-700 hover:bg-gray-50"
-            }`}
-            aria-disabled={page <= 1}
-          >
-            Previous
-          </Link>
+            label="Previous"
+            variant="outline"
+            color="secondary"
+            disabled={page <= 1}
+          />
 
           <span className="px-4 py-2 text-sm text-gray-600">
             Page {page} of {totalPages}
           </span>
 
-          <Link
+          <Button
             href={`/dashboard?page=${page + 1}${filterSuffix}`}
-            className={`px-4 py-2 border rounded-md ${
-              page >= totalPages
-                ? "pointer-events-none opacity-50 bg-gray-100 text-gray-400"
-                : "bg-white text-gray-700 hover:bg-gray-50"
-            }`}
-            aria-disabled={page >= totalPages}
-          >
-            Next
-          </Link>
+            label="Next"
+            variant="outline"
+            color="secondary"
+            disabled={page >= totalPages}
+          />
         </div>
       )}
     </div>
