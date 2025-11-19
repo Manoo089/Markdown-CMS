@@ -6,6 +6,7 @@ import { createPost } from "./actions";
 import { generateSlug } from "@/lib/slug-utils";
 import { MarkdownPreview } from "@/components/MarkdownPreview";
 import Button from "@/ui/Button";
+import InputField from "@/ui/InputField";
 
 interface Props {
   userId: string;
@@ -54,20 +55,28 @@ export function PostForm({ userId, organizationId }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 space-y-6">
-      <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-          Title
-        </label>
-        <input
-          id="title"
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Enter post title"
-          required
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-      </div>
+      <InputField
+        id="title"
+        type="text"
+        label="Title"
+        value={title}
+        placeholder="Enter post title"
+        fullWidth
+        required
+        onChange={(e) => setTitle(e.target.value)}
+      />
+
+      <InputField
+        id="slug"
+        type="text"
+        label="Slug"
+        value={slug}
+        placeholder="post-url-slug"
+        fullWidth
+        required
+        advancedLabel="(auto-generated, but editable)"
+        onChange={(e) => setManualSlug(e.target.value)}
+      />
 
       <div>
         <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-2">
@@ -90,60 +99,41 @@ export function PostForm({ userId, organizationId }: Props) {
         </p>
       </div>
 
-      <div>
-        <label htmlFor="slug" className="block text-sm font-medium text-gray-700 mb-2">
-          Slug
-          <span className="text-gray-500 text-xs ml-2">(auto-generated, but editable)</span>
-        </label>
-        <input
-          id="slug"
-          type="text"
-          value={slug}
-          onChange={(e) => setManualSlug(e.target.value)}
-          placeholder="post-url-slug"
-          required
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
-        />
-      </div>
-
-      <div>
-        <label htmlFor="excerpt" className="block text-sm font-medium text-gray-700 mb-2">
-          Excerpt (Optional)
-        </label>
-        <textarea
-          id="excerpt"
-          value={excerpt}
-          onChange={(e) => setExcerpt(e.target.value)}
-          placeholder="Short description..."
-          rows={3}
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-      </div>
+      <InputField
+        id="excerpt"
+        type="textarea"
+        label="Excerpt (Optional)"
+        value={excerpt}
+        placeholder="Short description..."
+        rows={3}
+        fullWidth
+        advancedLabel="(auto-generated, but editable)"
+        onChange={(e) => setExcerpt(e.target.value)}
+      />
 
       <div>
         <div className="flex items-center justify-between mb-2">
           <label className="block text-sm font-medium text-gray-700">Content (Markdown)</label>
-          <button
+          <Button
             type="button"
+            label={showPreview ? "Hide Preview" : "Show Preview"}
             onClick={() => setShowPreview(!showPreview)}
+            variant="plain"
             className="text-sm text-blue-600 hover:text-blue-800 font-medium"
-          >
-            {showPreview ? "Hide Preview" : "Show Preview"}
-          </button>
+          />
         </div>
-
         <div className={`grid gap-4 ${showPreview ? "grid-cols-2" : "grid-cols-1"}`}>
-          <div>
-            <textarea
-              id="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="# Your markdown content here..."
-              required
-              rows={20}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-            />
-          </div>
+          <InputField
+            id="content"
+            type="textarea"
+            label=""
+            value={content}
+            placeholder="# Your markdown content here..."
+            rows={20}
+            fullWidth
+            isMarkdown
+            onChange={(e) => setContent(e.target.value)}
+          />
 
           {showPreview && (
             <div className="border border-gray-300 rounded-md p-4 bg-gray-50 overflow-auto max-h-[500px]">

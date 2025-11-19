@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/ui/Button";
+import InputField from "@/ui/InputField";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 
@@ -32,23 +33,23 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 space-y-6">
-      <input
+      <InputField
+        id="email"
         type="email"
-        name="email"
+        label=""
         placeholder="Gib deine E-Mail ein"
         value={email}
+        fullWidth
         onChange={(e) => setEmail(e.target.value)}
-        required
-        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
       />
-      <input
+      <InputField
+        id="password"
         type="password"
-        name="password"
+        label=""
         placeholder="Gib dein Passwort ein"
         value={password}
+        fullWidth
         onChange={(e) => setPassword(e.target.value)}
-        required
-        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
       />
       <Button type="submit" disabled={isSigningIn} label={isSigningIn ? "Signing in..." : "Sign In"} fullWidth />
 

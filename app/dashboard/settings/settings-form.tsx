@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { updateSettings } from "./actions";
+import Button from "@/ui/Button";
+import InputField from "@/ui/InputField";
 
 interface Props {
   settings: {
@@ -65,47 +67,35 @@ export function SettingsForm({ settings }: Props) {
       <div>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">General</h3>
         <div className="space-y-4">
-          <div>
-            <label htmlFor="siteTitle" className="block text-sm font-medium text-gray-700 mb-2">
-              Site Title
-            </label>
-            <input
-              id="siteTitle"
-              type="text"
-              value={siteTitle}
-              onChange={(e) => setSiteTitle(e.target.value)}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
+          <InputField
+            id="siteTitle"
+            type="text"
+            label="Site Title"
+            value={siteTitle}
+            required
+            fullWidth
+            onChange={(e) => setSiteTitle(e.target.value)}
+          />
 
-          <div>
-            <label htmlFor="logoUrl" className="block text-sm font-medium text-gray-700 mb-2">
-              Logo URL
-            </label>
-            <input
-              id="logoUrl"
-              type="url"
-              value={logoUrl}
-              onChange={(e) => setLogoUrl(e.target.value)}
-              placeholder="https://example.com/logo.png"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
+          <InputField
+            id="logoUrl"
+            type="url"
+            label="Logo URL"
+            value={logoUrl}
+            placeholder="https://example.com/logo.png"
+            fullWidth
+            onChange={(e) => setLogoUrl(e.target.value)}
+          />
 
-          <div>
-            <label htmlFor="faviconUrl" className="block text-sm font-medium text-gray-700 mb-2">
-              Favicon URL
-            </label>
-            <input
-              id="faviconUrl"
-              type="url"
-              value={faviconUrl}
-              onChange={(e) => setFaviconUrl(e.target.value)}
-              placeholder="https://example.com/favicon.ico"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
+          <InputField
+            id="faviconUrl"
+            type="url"
+            label="Favicon URL"
+            value={faviconUrl}
+            placeholder="https://example.com/favicon.ico"
+            fullWidth
+            onChange={(e) => setFaviconUrl(e.target.value)}
+          />
         </div>
       </div>
 
@@ -113,53 +103,39 @@ export function SettingsForm({ settings }: Props) {
       <div>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">SEO</h3>
         <div className="space-y-4">
-          <div>
-            <label htmlFor="seoTitleTemplate" className="block text-sm font-medium text-gray-700 mb-2">
-              Title Template
-            </label>
-            <input
-              id="seoTitleTemplate"
-              type="text"
-              value={seoTitleTemplate}
-              onChange={(e) => setSeoTitleTemplate(e.target.value)}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              Use %s as placeholder for page title. Example: &quot;%s | My Website&quot;
-            </p>
-          </div>
+          <InputField
+            id="seoTitleTemplate"
+            type="text"
+            label="Title Template"
+            value={seoTitleTemplate}
+            placeholder="https://example.com/favicon.ico"
+            description='Use %s as placeholder for page title. Example: "%s | My Website'
+            required
+            fullWidth
+            onChange={(e) => setSeoTitleTemplate(e.target.value)}
+          />
 
-          <div>
-            <label htmlFor="seoDefaultDescription" className="block text-sm font-medium text-gray-700 mb-2">
-              Default Meta Description
-            </label>
-            <textarea
-              id="seoDefaultDescription"
-              value={seoDefaultDescription}
-              onChange={(e) => setSeoDefaultDescription(e.target.value)}
-              rows={3}
-              placeholder="Default description for pages without their own"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
+          <InputField
+            id="seoDefaultDescription"
+            type="textarea"
+            label="Default Meta Description"
+            value={seoDefaultDescription}
+            placeholder="Default description for pages without their own"
+            rows={3}
+            fullWidth
+            onChange={(e) => setSeoDefaultDescription(e.target.value)}
+          />
 
-          <div>
-            <label htmlFor="ogImageUrl" className="block text-sm font-medium text-gray-700 mb-2">
-              Default OG Image URL
-            </label>
-            <input
-              id="ogImageUrl"
-              type="url"
-              value={ogImageUrl}
-              onChange={(e) => setOgImageUrl(e.target.value)}
-              placeholder="https://example.com/og-image.png"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              Image shown when sharing on social media (recommended: 1200x630px)
-            </p>
-          </div>
+          <InputField
+            id="ogImageUrl"
+            type="url"
+            label="Default OG Image URL"
+            value={ogImageUrl}
+            placeholder="https://example.com/og-image.png"
+            description="Image shown when sharing on social media (recommended: 1200x630px)"
+            fullWidth
+            onChange={(e) => setOgImageUrl(e.target.value)}
+          />
         </div>
       </div>
 
@@ -167,28 +143,17 @@ export function SettingsForm({ settings }: Props) {
       <div>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">API Settings</h3>
         <div className="space-y-4">
-          <div>
-            <label htmlFor="allowedOrigins" className="block text-sm font-medium text-gray-700 mb-2">
-              Allowed Origins (CORS)
-            </label>
-            <div className="flex">
-              <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
-                http(s)://
-              </span>
-
-              <input
-                id="allowedOrigins"
-                type="text"
-                value={allowedOrigins}
-                onChange={(e) => setAllowedOrigins(e.target.value)}
-                placeholder="example.com, app.example.com"
-                className="w-full px-4 py-2 border border-gray-300 rounded-r-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-            <p className="text-xs text-gray-500 mt-1">
-              Comma-separated list of domains that can access your API. Use * for all domains.
-            </p>
-          </div>
+          <InputField
+            id="allowedOrigins"
+            type="text"
+            label="Allowed Origins (CORS)"
+            value={allowedOrigins}
+            placeholder="example.com, app.example.com"
+            startAddon="http(s)://"
+            description="Comma-separated list of domains that can access your API. Use * for all domains."
+            fullWidth
+            onChange={(e) => setAllowedOrigins(e.target.value)}
+          />
         </div>
       </div>
 
@@ -203,13 +168,13 @@ export function SettingsForm({ settings }: Props) {
 
       {/* Submit */}
       <div>
-        <button
+        <Button
           type="submit"
+          label={isSubmitting ? "Saving..." : "Save Settings"}
           disabled={isSubmitting}
-          className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isSubmitting ? "Saving..." : "Save Settings"}
-        </button>
+          variant="solid"
+          color="primary"
+        />
       </div>
     </form>
   );

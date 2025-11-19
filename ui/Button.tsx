@@ -3,7 +3,7 @@ import clsx from "clsx";
 import Link from "next/link";
 
 type ButtonTypes = "submit" | "reset" | "button";
-type ButtonColors = "primary" | "secondary" | "danger";
+type ButtonColors = "primary" | "secondary" | "success" | "danger";
 type ButtonVariants = "solid" | "outline" | "plain";
 
 interface BaseProps {
@@ -80,6 +80,10 @@ export default function Button(props: Props) {
         base: "bg-gray-600 text-white",
         hover: "hover:bg-gray-900",
       },
+      success: {
+        base: "bg-green-600 text-white",
+        hover: "hover:bg-green-700",
+      },
       danger: {
         base: "bg-red-600 text-white",
         hover: "hover:bg-red-700",
@@ -94,6 +98,10 @@ export default function Button(props: Props) {
         base: "bg-transparent text-gray-600 border border-gray-600",
         hover: "hover:text-gray-900 hover:border-gray-900",
       },
+      success: {
+        base: "bg-transparent text-green-600 border border-green-600",
+        hover: "hover:text-green-700 hover:border-green-700",
+      },
       danger: {
         base: "bg-transparent text-red-600 border border-red-600",
         hover: "hover:text-red-700 hover:border-red-700",
@@ -107,6 +115,10 @@ export default function Button(props: Props) {
       secondary: {
         base: "bg-transparent text-gray-600",
         hover: "hover:text-gray-900",
+      },
+      success: {
+        base: "bg-transparent text-green-600",
+        hover: "hover:text-green-700",
       },
       danger: {
         base: "bg-transparent text-red-600",

@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { createApiKey, deleteApiKey } from "./api-keys-actions";
+import Button from "@/ui/Button";
+import InputField from "@/ui/InputField";
 
 interface ApiKey {
   id: string;
@@ -69,33 +71,38 @@ export function ApiKeys({ apiKeys }: Props) {
           </p>
           <div className="flex items-center gap-2">
             <code className="flex-1 p-2 bg-white border rounded text-sm font-mono break-all">{newKey}</code>
-            <button
+            <Button
+              type="button"
+              label="Copy"
+              variant="solid"
+              color="success"
               onClick={() => copyToClipboard(newKey)}
-              className="px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-sm"
-            >
-              Copy
-            </button>
+              className="px-3 py-2 text-sm"
+            />
           </div>
         </div>
       )}
 
       {/* Create Form */}
-      <form onSubmit={handleCreate} className="mb-6">
+      <form onSubmit={handleCreate} className="w-full mb-6">
         <div className="flex gap-2">
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Key name (e.g., Production)"
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-          <button
+          <div className="flex-1">
+            <InputField
+              id="keyName"
+              label=""
+              type="text"
+              value={name}
+              placeholder="Key name (e.g., Production)"
+              fullWidth
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+
+          <Button
             type="submit"
+            label={isCreating ? "Creating..." : "Create Key"}
             disabled={isCreating || !name.trim()}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
-          >
-            {isCreating ? "Creating..." : "Create Key"}
-          </button>
+          />
         </div>
         {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
       </form>
@@ -114,12 +121,14 @@ export function ApiKeys({ apiKeys }: Props) {
                   {apiKey.lastUsedAt && <> · Last used {new Date(apiKey.lastUsedAt).toLocaleDateString()}</>}
                 </p>
               </div>
-              <button
+              <Button
+                type="button"
+                label="Delete"
+                variant="plain"
+                color="danger"
                 onClick={() => handleDelete(apiKey.id)}
-                className="px-3 py-1 text-red-600 hover:text-red-800 text-sm font-medium"
-              >
-                Delete
-              </button>
+                className="text-sm"
+              />
             </div>
           ))}
         </div>
