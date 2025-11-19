@@ -1,73 +1,41 @@
 import clsx from "clsx";
+import { twMerge } from "tailwind-merge";
+import { inputBaseStyles, inputCoreStyles } from "./shared/fieldStyles";
+import { BaseInputProps } from "@/types/form";
 
 type InputFieldTypes = "text" | "email" | "password" | "url";
 
-interface BaseProps {
-  advancedLabel?: string;
-  id: string;
-  description?: string;
-  fullWidth?: boolean;
-  label: string;
-  placeholder?: string;
-  required?: boolean;
-  value: string;
-}
-
-interface InputProps extends BaseProps {
-  type: InputFieldTypes;
-  isMarkdown?: never;
-  rows?: never;
+interface Props extends BaseInputProps {
   startAddon?: string;
+  type: InputFieldTypes;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-interface TextareaProps extends BaseProps {
-  type: "textarea";
-  isMarkdown?: boolean;
-  rows?: number;
-  startAddon?: never;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-}
-
-type Props = InputProps | TextareaProps;
-
 export default function InputField({
   advancedLabel,
+  className,
   id,
   description,
+  disabled,
   fullWidth,
-  isMarkdown,
   label,
   placeholder,
   required,
   startAddon,
   type,
-  rows,
   value,
   onChange,
 }: Props) {
-  const baseInputClasses = "px-4 py-2 border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent";
-
   return (
-    <div>
+    <div className={className}>
       <label htmlFor={id} className={clsx("block text-sm font-medium text-gray-700", label.length > 0 && "mb-2")}>
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
         {advancedLabel && <span className="text-gray-500 text-xs ml-2">{advancedLabel}</span>}
       </label>
 
-      {type === "textarea" ? (
-        <textarea
-          id={id}
-          value={value}
-          placeholder={placeholder}
-          required={required}
-          rows={rows ?? 4}
-          onChange={onChange}
-          className={clsx(baseInputClasses, fullWidth && "w-full", isMarkdown && "font-mono")}
-        />
-      ) : startAddon ? (
-        <div className="flex">
+      {startAddon ? (
+        <div className={clsx("flex", fullWidth && "w-full")}>
           <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
             {startAddon}
           </span>
@@ -77,8 +45,9 @@ export default function InputField({
             value={value}
             placeholder={placeholder}
             required={required}
+            disabled={disabled}
             onChange={onChange}
-            className={clsx(baseInputClasses, fullWidth && "w-full")}
+            className={twMerge(inputCoreStyles, "rounded-r-md flex-1")}
           />
         </div>
       ) : (
@@ -88,8 +57,9 @@ export default function InputField({
           value={value}
           placeholder={placeholder}
           required={required}
+          disabled={disabled}
           onChange={onChange}
-          className={clsx(baseInputClasses, fullWidth && "w-full")}
+          className={clsx(inputBaseStyles, fullWidth && "w-full")}
         />
       )}
       {description && <p className="text-xs text-gray-500 mt-1">{description}</p>}
