@@ -5,6 +5,7 @@ import { DeleteButton } from "./delete-button";
 import { HighlightText } from "./highlight-text";
 import { POSTS_PER_PAGE } from "@/lib/constants";
 import Button from "@/ui/Button";
+import Badge from "@/ui/Badge";
 
 interface Props {
   page?: number;
@@ -100,30 +101,12 @@ export async function PostsList({ page = 1, status = "all", type = "all", search
                   <span>•</span>
 
                   {/* Type Badge */}
-                  <span
-                    className={`px-2 py-1 rounded text-xs font-medium ${
-                      post.type === "service"
-                        ? "bg-purple-100 text-purple-800"
-                        : post.type === "page"
-                        ? "bg-blue-100 text-blue-800"
-                        : "bg-gray-100 text-gray-800"
-                    }`}
-                  >
-                    {post.type}
-                  </span>
-
+                  <Badge value={post.type} variant="type" />
                   <span>•</span>
-
-                  {/* Published/Draft Badge */}
-                  <span
-                    className={`px-2 py-1 rounded text-xs font-medium ${
-                      post.published ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
-                    }`}
-                  >
-                    {post.published ? "Published" : "Draft"}
-                  </span>
+                  <Badge value={post.published ? "published" : "draft"} variant="status" />
                 </div>
               </div>
+              
               <div className="ml-4 flex gap-3">
                 <Button href={`/dashboard/posts/${post.id}/edit`} variant="plain" label="Edit" className="text-sm" />
                 <DeleteButton postId={post.id} postTitle={post.title} />
