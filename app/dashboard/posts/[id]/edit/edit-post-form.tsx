@@ -3,10 +3,14 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { generateSlug } from "@/lib/slug-utils";
+import { contentTypeOptions } from "@/lib/constants";
 import { updatePost } from "./actions";
 import { MarkdownPreview } from "@/components/MarkdownPreview";
 import Button from "@/ui/Button";
 import InputField from "@/ui/InputField";
+import TextareaField from "@/ui/TextareaField";
+import SelectField from "@/ui/SelectField";
+import CheckboxField from "@/ui/CheckboxField";
 
 interface Props {
   post: {
@@ -87,25 +91,17 @@ export function EditPostForm({ post, organizationId }: Props) {
         onChange={(e) => setManualSlug(e.target.value)}
       />
 
-      <div>
-        <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-2">
-          Content Type
-        </label>
-        <select
-          id="type"
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        >
-          <option value="post">Blog Post</option>
-          <option value="page">Page</option>
-          <option value="service">Service</option>
-        </select>
-      </div>
+      <SelectField
+        id="type"
+        label="Content Type"
+        options={contentTypeOptions}
+        value={type}
+        fullWidth
+        onChange={(e) => setType(e.target.value)}
+      />
 
-      <InputField
+      <TextareaField
         id="excerpt"
-        type="textarea"
         label="Excerpt (Optional)"
         value={excerpt}
         placeholder="Short description..."
@@ -127,9 +123,8 @@ export function EditPostForm({ post, organizationId }: Props) {
           />
         </div>
         <div className={`grid gap-4 ${showPreview ? "grid-cols-2" : "grid-cols-1"}`}>
-          <InputField
+          <TextareaField
             id="content"
-            type="textarea"
             label=""
             value={content}
             placeholder="# Your markdown content here..."
@@ -148,16 +143,12 @@ export function EditPostForm({ post, organizationId }: Props) {
       </div>
 
       <div className="flex items-center">
-        <input
-          id="published"
-          type="checkbox"
+        <CheckboxField
+          id="pusblished"
           checked={published}
+          label="Publish immediately"
           onChange={(e) => setPublished(e.target.checked)}
-          className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
         />
-        <label htmlFor="published" className="ml-2 block text-sm text-gray-700">
-          Publish immediately
-        </label>
       </div>
 
       {error && <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-md">{error}</div>}

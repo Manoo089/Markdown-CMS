@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { updateSettings } from "./actions";
 import Button from "@/ui/Button";
 import InputField from "@/ui/InputField";
+import TextareaField from "@/ui/TextareaField";
 
 interface Props {
   settings: {
@@ -115,9 +116,8 @@ export function SettingsForm({ settings }: Props) {
             onChange={(e) => setSeoTitleTemplate(e.target.value)}
           />
 
-          <InputField
+          <TextareaField
             id="seoDefaultDescription"
-            type="textarea"
             label="Default Meta Description"
             value={seoDefaultDescription}
             placeholder="Default description for pages without their own"
