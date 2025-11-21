@@ -48,12 +48,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: "/login",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       // Bei Login: user ist verfügbar
       if (user) {
         token.id = user.id;
         token.organizationId = user.organizationId;
+        token.email = user.email;
+        token.name = user.name;
       }
+
+      if (trigger === "update" && session) {
+        token.email = session.email;
+        token.name = session.name;
+      }
+
       return token;
     },
     async session({ session, token }) {
@@ -61,6 +69,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (session.user) {
         session.user.id = token.id as string;
         session.user.organizationId = token.organizationId as string;
+        session.user.email = token.email as string;
+        session.user.name = token.name as string;
       }
       return session;
     },

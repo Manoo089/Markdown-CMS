@@ -37,6 +37,14 @@ export default async function DashboardPage({ searchParams }: Props) {
                 className="text-sm"
               />
 
+              <Button
+                href="/dashboard/profile"
+                label="My Profile"
+                variant="plain"
+                color="secondary"
+                className="text-sm"
+              />
+
               <span className="text-sm text-gray-600">{session?.user?.email}</span>
               <LogoutButton />
             </div>
