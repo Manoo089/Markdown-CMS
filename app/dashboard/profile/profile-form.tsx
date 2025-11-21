@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import Button from "@/ui/Button";
 import InputField from "@/ui/InputField";
 import { updateProfile, updatePassword } from "./actions";
+import { updatePasswordSchema, updateProfileSchema, PASSWORD_MIN_LENGTH } from "@/lib/schemas/user.schema";
 
 type User = {
   id: string;
@@ -31,7 +32,7 @@ export function ProfileForm({ user }: Props) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
   const [isSavingPassword, setIsSavingPassword] = useState(false);
 
   const handleProfileSubmit = async (e: React.FormEvent) => {
@@ -40,7 +41,16 @@ export function ProfileForm({ user }: Props) {
     setProfileMessage("");
     setProfileError("");
 
-    const result = await updateProfile({ name, email });
+    // Client-side Zod Validation
+    const validation = updateProfileSchema.safeParse({ name, email });
+
+    if (!validation.success) {
+      setProfileError(validation.error.issues[0].message);
+      setIsSavingProfile(false);
+      return;
+    }
+
+    const result = await updateProfile(validation.data);
 
     if (result.error) {
       setProfileError(result.error);
@@ -48,8 +58,8 @@ export function ProfileForm({ user }: Props) {
       setProfileMessage("Profile updated successfully!");
 
       await update({
-        email,
-        name,
+        email: validation.data.email,
+        name: validation.data.name,
       });
     }
 
@@ -60,25 +70,29 @@ export function ProfileForm({ user }: Props) {
     e.preventDefault();
     setIsSavingPassword(true);
     setPasswordMessage("");
-    setPasswordError("");
+    setPasswordErrors([]);
 
-    // Client-side Validation
-    if (newPassword !== confirmPassword) {
-      setPasswordError("New passwords do not match");
+    // Client-side Zod Validation
+    const validation = updatePasswordSchema.safeParse({
+      currentPassword,
+      newPassword,
+      confirmPassword,
+    });
+
+    if (!validation.success) {
+      // Alle Fehler anzeigen
+      const errors = validation.error.issues.map((issue) => issue.message);
+      setPasswordErrors(errors);
       setIsSavingPassword(false);
       return;
     }
 
-    if (newPassword.length < 8) {
-      setPasswordError("Password must be at least 8 characters");
-      setIsSavingPassword(false);
-      return;
-    }
+    const result = await updatePassword(validation.data);
 
-    const result = await updatePassword({ currentPassword, newPassword });
-
-    if (result.error) {
-      setPasswordError(result.error);
+    if ("errors" in result) {
+      setPasswordErrors(result.errors);
+    } else if ("error" in result) {
+      setPasswordErrors([result.error]);
     } else {
       setPasswordMessage("Password updated successfully!");
       setCurrentPassword("");
@@ -124,6 +138,16 @@ export function ProfileForm({ user }: Props) {
       {/* Password Section */}
       <div className="bg-white rounded-lg shadow p-6">
         <h2 className="text-xl font-semibold mb-4">Change Password</h2>
+
+        {/* Password Requirements Info */}
+        <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded text-sm text-blue-800">
+          <p className="font-medium mb-1">Password requirements:</p>
+          <ul className="list-disc list-inside space-y-1">
+            <li>At least {PASSWORD_MIN_LENGTH} characters long</li>
+            <li>Contains at least one special character (!@#$%^&* etc.)</li>
+          </ul>
+        </div>
+
         <form onSubmit={handlePasswordSubmit} className="space-y-4">
           <InputField
             id="currentPassword"
@@ -153,7 +177,16 @@ export function ProfileForm({ user }: Props) {
             fullWidth
           />
 
-          {passwordError && <p className="text-red-600 text-sm">{passwordError}</p>}
+          {passwordErrors.length > 0 && (
+            <ul className="list-disc list-inside space-y-1">
+              {passwordErrors.map((error, idx) => (
+                <li key={idx} className="text-red-600 text-sm">
+                  {error}
+                </li>
+              ))}
+            </ul>
+          )}
+
           {passwordMessage && <p className="text-green-600 text-sm">{passwordMessage}</p>}
 
           <Button

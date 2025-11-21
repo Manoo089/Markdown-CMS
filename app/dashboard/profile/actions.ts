@@ -4,18 +4,9 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import bcrypt from "bcryptjs";
+import { updatePasswordSchema, updateProfileSchema } from "@/lib/schemas/user.schema";
 
-type UpdateProfileInput = {
-  name: string;
-  email: string;
-};
-
-type UpdatePasswordInput = {
-  currentPassword: string;
-  newPassword: string;
-};
-
-export async function updateProfile(data: UpdateProfileInput) {
+export async function updateProfile(data: unknown) {
   try {
     const session = await auth();
 
@@ -23,9 +14,18 @@ export async function updateProfile(data: UpdateProfileInput) {
       return { error: "Unauthorized" };
     }
 
-    if (data.email !== session.user.email) {
+    // Zod Validation
+    const validation = updateProfileSchema.safeParse(data);
+    if (!validation.success) {
+      return { error: validation.error.issues[0].message };
+    }
+
+    const { name, email } = validation.data;
+
+    // Prüfen ob Email bereits vergeben ist (außer eigene)
+    if (email !== session.user.email) {
       const existingUser = await prisma.user.findUnique({
-        where: { email: data.email },
+        where: { email },
       });
 
       if (existingUser) {
@@ -36,8 +36,8 @@ export async function updateProfile(data: UpdateProfileInput) {
     await prisma.user.update({
       where: { id: session.user.id },
       data: {
-        name: data.name || null,
-        email: data.email,
+        name: name || null,
+        email,
       },
     });
 
@@ -51,7 +51,9 @@ export async function updateProfile(data: UpdateProfileInput) {
   }
 }
 
-export async function updatePassword(data: UpdatePasswordInput) {
+type ActionResult = { success: true } | { error: string } | { errors: string[] };
+
+export async function updatePassword(data: unknown): Promise<ActionResult> {
   try {
     const session = await auth();
 
@@ -59,21 +61,35 @@ export async function updatePassword(data: UpdatePasswordInput) {
       return { error: "Unauthorized" };
     }
 
+    // Zod Validation
+    const validation = updatePasswordSchema.safeParse(data);
+
+    if (!validation.success) {
+      // Alle Fehler zurückgeben (für besseres UX)
+      const errors = validation.error.issues.map((issue) => issue.message);
+      return { errors };
+    }
+
+    const { currentPassword, newPassword } = validation.data;
+
+    // User mit aktuellem Passwort laden
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
     });
 
     if (!user || !user.password) {
-      return { error: "User not found!" };
+      return { error: "User not found" };
     }
 
-    const isCurrentPasswordValid = await bcrypt.compare(data.currentPassword, user.password);
+    // Aktuelles Passwort prüfen
+    const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
 
     if (!isCurrentPasswordValid) {
-      return { error: "Current password is incorrect!" };
+      return { error: "Current password is incorrect" };
     }
 
-    const hashedPassword = await bcrypt.hash(data.newPassword, 10);
+    // Neues Passwort hashen und speichern
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     await prisma.user.update({
       where: { id: session.user.id },
