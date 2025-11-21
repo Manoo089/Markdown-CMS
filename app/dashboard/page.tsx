@@ -1,9 +1,9 @@
 import { requireAuth } from "@/lib/auth-utils";
-import { LogoutButton } from "./LogoutButton";
 import { PostsList } from "./posts-list";
 import { Suspense } from "react";
 import { PostFilters } from "./post-filters";
 import Button from "@/ui/Button";
+import { UserMenu } from "@/components/UserMenu";
 
 interface Props {
   searchParams: Promise<{
@@ -31,22 +31,13 @@ export default async function DashboardPage({ searchParams }: Props) {
             <div className="flex items-center gap-4">
               <Button
                 href="/dashboard/settings"
-                label="Settings"
+                label="Site Settings"
                 variant="plain"
                 color="secondary"
                 className="text-sm"
               />
 
-              <Button
-                href="/dashboard/profile"
-                label="My Profile"
-                variant="plain"
-                color="secondary"
-                className="text-sm"
-              />
-
-              <span className="text-sm text-gray-600">{session?.user?.email}</span>
-              <LogoutButton />
+              <UserMenu name={session.user.name} email={session.user.email} />
             </div>
           </div>
         </div>
