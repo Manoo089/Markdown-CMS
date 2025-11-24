@@ -3,6 +3,7 @@ import { PostsList } from "./posts-list";
 import { Suspense } from "react";
 import { PostFilters } from "./post-filters";
 import Button from "@/ui/Button";
+import Navigation from "@/components/Navigation";
 import { UserMenu } from "@/components/UserMenu";
 import { ModeToggle } from "@/components/ModeToggle";
 
@@ -25,26 +26,22 @@ export default async function DashboardPage({ searchParams }: Props) {
 
   return (
     <div className="min-h-screen bg-background">
-      <nav className="bg-surface shadow-sm border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <h1 className="text-xl font-bold">MDCMS Dashboard</h1>
-            <div className="flex items-center gap-4">
-              <Button
-                href="/dashboard/settings"
-                label="Site Settings"
-                variant="plain"
-                color="secondary"
-                className="text-sm"
-              />
+      <Navigation>
+        <h1 className="text-xl font-bold">MDCMS Dashboard</h1>
+        <div className="flex items-center gap-4">
+          <Button
+            href="/dashboard/settings"
+            label="Site Settings"
+            variant="plain"
+            color="secondary"
+            className="text-sm"
+          />
 
-              <ModeToggle />
+          <ModeToggle />
 
-              <UserMenu name={session.user.name} email={session.user.email} />
-            </div>
-          </div>
+          <UserMenu name={session.user.name} email={session.user.email} />
         </div>
-      </nav>
+      </Navigation>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <PostFilters />

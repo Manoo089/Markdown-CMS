@@ -2,6 +2,8 @@ import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { EditPostForm } from "./edit-post-form";
+import Navigation from "@/components/Navigation";
+import Button from "@/ui/Button";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -28,6 +30,12 @@ export default async function EditPostPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-background">
+      <Navigation>
+        <div className="flex items-center gap-4">
+          <Button href="/dashboard" label="← Back to Dashboard" variant="plain" color="secondary" />
+        </div>
+      </Navigation>
+      
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
           <h1 className="text-3xl font-bold">Edit Post</h1>

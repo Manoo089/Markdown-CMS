@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { SettingsForm } from "./settings-form";
 import { ApiKeys } from "./api-keys";
 import Button from "@/ui/Button";
+import Navigation from "@/components/Navigation";
 
 export default async function SettingsPage() {
   const session = await requireAuth();
@@ -27,15 +28,11 @@ export default async function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <nav className="bg-surface shadow-sm border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center gap-4">
-              <Button href="/dashboard" label="← Back to Dashboard" variant="plain" color="secondary" />
-            </div>
-          </div>
+      <Navigation>
+        <div className="flex items-center gap-4">
+          <Button href="/dashboard" label="← Back to Dashboard" variant="plain" color="secondary" />
         </div>
-      </nav>
+      </Navigation>
 
       <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
