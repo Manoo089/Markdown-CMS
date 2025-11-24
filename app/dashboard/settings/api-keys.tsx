@@ -60,17 +60,17 @@ export function ApiKeys({ apiKeys }: Props) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">API Keys</h3>
+    <div className="bg-surface rounded-lg shadow p-6">
+      <h3 className="text-lg font-semibold text-text mb-4">API Keys</h3>
 
       {/* New Key Display */}
       {newKey && (
-        <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-md">
-          <p className="text-sm font-medium text-green-800 mb-2">
+        <div className="mb-6 p-4 bg-success border border-border rounded-md">
+          <p className="text-sm font-medium text-success-light mb-2">
             API Key created! Copy it now - you won&apos;t see it again.
           </p>
           <div className="flex items-center gap-2">
-            <code className="flex-1 p-2 bg-white border rounded text-sm font-mono break-all">{newKey}</code>
+            <code className="flex-1 p-2 bg-surface border border-border rounded text-sm font-mono break-all">{newKey}</code>
             <Button
               type="button"
               label="Copy"
@@ -109,14 +109,14 @@ export function ApiKeys({ apiKeys }: Props) {
 
       {/* Existing Keys */}
       {apiKeys.length === 0 ? (
-        <p className="text-gray-500 text-sm">No API keys yet.</p>
+        <p className="text-text-muted text-sm">No API keys yet.</p>
       ) : (
         <div className="space-y-3">
           {apiKeys.map((apiKey) => (
-            <div key={apiKey.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+            <div key={apiKey.id} className="flex items-center justify-between p-3 bg-surface border border-border rounded-md">
               <div>
-                <p className="font-medium text-gray-900">{apiKey.name}</p>
-                <p className="text-sm text-gray-500">
+                <p className="font-medium text-text">{apiKey.name}</p>
+                <p className="text-sm text-text-subtle">
                   Created {new Date(apiKey.createdAt).toLocaleDateString()}
                   {apiKey.lastUsedAt && <> · Last used {new Date(apiKey.lastUsedAt).toLocaleDateString()}</>}
                 </p>

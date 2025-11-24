@@ -106,7 +106,7 @@ export function ProfileForm({ user }: Props) {
   return (
     <div className="space-y-8">
       {/* Profile Section */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-surface rounded-lg shadow p-6">
         <h2 className="text-xl font-semibold mb-4">Profile Information</h2>
         <form onSubmit={handleProfileSubmit} className="space-y-4">
           <InputField
@@ -136,11 +136,11 @@ export function ProfileForm({ user }: Props) {
       </div>
 
       {/* Password Section */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-surface rounded-lg shadow p-6">
         <h2 className="text-xl font-semibold mb-4">Change Password</h2>
 
         {/* Password Requirements Info */}
-        <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded text-sm text-blue-800">
+        <div className="mb-4 p-3 bg-surface border border-border rounded text-sm text-text-muted">
           <p className="font-medium mb-1">Password requirements:</p>
           <ul className="list-disc list-inside space-y-1">
             <li>At least {PASSWORD_MIN_LENGTH} characters long</li>

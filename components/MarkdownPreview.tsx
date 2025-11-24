@@ -12,7 +12,7 @@ interface Props {
 
 export function MarkdownPreview({ content }: Props) {
   return (
-    <div className="prose prose-slate max-w-none">
+    <div className="prose prose-slate max-w-none bg-surface">
       <ReactMarkdown
         rehypePlugins={[rehypeRaw, rehypeSanitize]}
         components={{

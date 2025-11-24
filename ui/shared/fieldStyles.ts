@@ -1,4 +1,4 @@
 export const inputCoreStyles = 
-  "px-4 py-2 border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent";
+  "px-4 py-2 border border-border focus:border-hover focus:border-hover";
 
 export const inputBaseStyles = `${inputCoreStyles} rounded-md`;

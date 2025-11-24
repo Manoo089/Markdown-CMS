@@ -63,10 +63,10 @@ export function SettingsForm({ settings }: Props) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 space-y-8">
+    <form onSubmit={handleSubmit} className="bg-surface rounded-lg shadow p-6 space-y-8">
       {/* General Settings */}
       <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">General</h3>
+        <h3 className="text-lg font-semibold text-text mb-4">General</h3>
         <div className="space-y-4">
           <InputField
             id="siteTitle"
@@ -102,7 +102,7 @@ export function SettingsForm({ settings }: Props) {
 
       {/* SEO Settings */}
       <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">SEO</h3>
+        <h3 className="text-lg font-semibold text-text mb-4">SEO</h3>
         <div className="space-y-4">
           <InputField
             id="seoTitleTemplate"
@@ -141,7 +141,7 @@ export function SettingsForm({ settings }: Props) {
 
       {/* API Settings */}
       <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">API Settings</h3>
+        <h3 className="text-lg font-semibold text-text mb-4">API Settings</h3>
         <div className="space-y-4">
           <InputField
             id="allowedOrigins"

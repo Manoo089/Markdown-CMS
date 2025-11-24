@@ -28,15 +28,15 @@ export default function InputField({
 }: Props) {
   return (
     <div className={className}>
-      <label htmlFor={id} className={clsx("block text-sm font-medium text-gray-700", label.length > 0 && "mb-2")}>
+      <label htmlFor={id} className={clsx("block text-sm font-medium text-text", label.length > 0 && "mb-2")}>
         {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
-        {advancedLabel && <span className="text-gray-500 text-xs ml-2">{advancedLabel}</span>}
+        {required && <span className="text-danger ml-1">*</span>}
+        {advancedLabel && <span className="text-text-subtle text-xs ml-2">{advancedLabel}</span>}
       </label>
 
       {startAddon ? (
         <div className={clsx("flex", fullWidth && "w-full")}>
-          <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+          <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border bg-surface text-text text-sm">
             {startAddon}
           </span>
           <input
@@ -62,7 +62,7 @@ export default function InputField({
           className={clsx(inputBaseStyles, fullWidth && "w-full")}
         />
       )}
-      {description && <p className="text-xs text-gray-500 mt-1">{description}</p>}
+      {description && <p className="text-xs text-text-muted mt-1">{description}</p>}
     </div>
   );
 }

@@ -67,7 +67,7 @@ export function EditPostForm({ post, organizationId }: Props) {
   };
 
   return (
-    <form className="bg-white rounded-lg shadow p-6 space-y-6" onSubmit={handleSubmit}>
+    <form className="bg-surface rounded-lg shadow p-6 space-y-6 border border-border" onSubmit={handleSubmit}>
       <InputField
         id="title"
         type="text"
@@ -113,13 +113,13 @@ export function EditPostForm({ post, organizationId }: Props) {
 
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="block text-sm font-medium text-gray-700">Content (Markdown)</label>
+          <label className="block text-sm font-medium text-text">Content (Markdown)</label>
           <Button
             type="button"
             label={showPreview ? "Hide Preview" : "Show Preview"}
             onClick={() => setShowPreview(!showPreview)}
             variant="plain"
-            className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+            className="text-sm text-primary hover:text-primary-hover font-medium"
           />
         </div>
         <div className={`grid gap-4 ${showPreview ? "grid-cols-2" : "grid-cols-1"}`}>
@@ -135,7 +135,7 @@ export function EditPostForm({ post, organizationId }: Props) {
           />
 
           {showPreview && (
-            <div className="border border-gray-300 rounded-md p-4 bg-gray-50 overflow-auto max-h-[500px]">
+            <div className="border border-border rounded-md p-4 bg-surface overflow-auto max-h-[500px]">
               <MarkdownPreview content={content} />
             </div>
           )}

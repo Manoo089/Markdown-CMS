@@ -15,13 +15,13 @@ export default function CheckboxField({ checked, className, disabled, id, label,
         checked={checked}
         onChange={onChange}
         className={clsx(
-          "h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500",
+          "h-4 w-4 text-primary border-border rounded focus:bg-transparent",
           disabled && "opacity-50 cursor-not-allowed"
         )}
       />
       <label
         htmlFor={id}
-        className={clsx("ml-2 block text-sm text-gray-700", disabled && "opacity-50 cursor-not-allowed")}
+        className={clsx("ml-2 block text-sm text-text-muted", disabled && "opacity-50 cursor-not-allowed")}
       >
         {label}
       </label>

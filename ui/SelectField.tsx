@@ -31,10 +31,10 @@ export default function SelectField({
 
   return (
     <div className={className}>
-      <label htmlFor={id} className={clsx("block text-sm font-medium text-gray-700", label.length > 0 && "mb-2")}>
+      <label htmlFor={id} className={clsx("block text-sm font-medium text-text", label.length > 0 && "mb-2")}>
         {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
-        {advancedLabel && <span className="text-gray-500 text-xs ml-2">{advancedLabel}</span>}
+        {required && <span className="text-danger ml-1">*</span>}
+        {advancedLabel && <span className="text-text-subtle text-xs ml-2">{advancedLabel}</span>}
       </label>
 
       <select
@@ -42,7 +42,7 @@ export default function SelectField({
         value={value}
         disabled={disabled}
         onChange={onChange}
-        className={clsx(inputBaseStyles, fullWidth && "w-full")}
+        className={clsx(inputBaseStyles, "bg-surface", fullWidth && "w-full")}
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>

@@ -32,7 +32,7 @@ export default function LoginForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 space-y-6">
+    <form onSubmit={handleSubmit} className="bg-surface rounded-lg shadow p-6 space-y-6 border border-border">
       <InputField
         id="email"
         type="email"
@@ -53,7 +53,7 @@ export default function LoginForm() {
       />
       <Button type="submit" disabled={isSigningIn} label={isSigningIn ? "Signing in..." : "Sign In"} fullWidth />
 
-      {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
+      {error && <div className="text-danger text-sm mt-2">{error}</div>}
     </form>
   );
 }
