@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@/lib/prisma";
 
@@ -5,6 +6,10 @@ import { SettingsForm } from "./settings-form";
 import { ApiKeys } from "./api-keys";
 import Button from "@/ui/Button";
 import Navigation from "@/components/Navigation";
+
+export const metadata: Metadata = {
+  title: "Site Settings",
+};
 
 export default async function SettingsPage() {
   const session = await requireAuth();

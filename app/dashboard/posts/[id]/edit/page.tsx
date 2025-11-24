@@ -1,9 +1,14 @@
+import { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { EditPostForm } from "./edit-post-form";
 import Navigation from "@/components/Navigation";
 import Button from "@/ui/Button";
+
+export const metadata: Metadata = {
+  title: "Edit post",
+};
 
 interface Props {
   params: Promise<{ id: string }>;

@@ -6,6 +6,11 @@ import Button from "@/ui/Button";
 import Navigation from "@/components/Navigation";
 import { UserMenu } from "@/components/UserMenu";
 import { ModeToggle } from "@/components/ModeToggle";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+};
 
 interface Props {
   searchParams: Promise<{

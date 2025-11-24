@@ -1,7 +1,12 @@
+import { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
 import { PostForm } from "./post-form";
 import Button from "@/ui/Button";
 import Navigation from "@/components/Navigation";
+
+export const metadata: Metadata = {
+  title: "Create new post",
+};
 
 export default async function NewPostPage() {
   const session = await requireAuth();

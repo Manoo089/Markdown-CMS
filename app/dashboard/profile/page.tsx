@@ -1,8 +1,13 @@
+import { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@/lib/prisma";
 import { ProfileForm } from "./profile-form";
 import Button from "@/ui/Button";
 import Navigation from "@/components/Navigation";
+
+export const metadata: Metadata = {
+  title: "My Profile",
+};
 
 export default async function ProfilePage() {
   const session = await requireAuth();

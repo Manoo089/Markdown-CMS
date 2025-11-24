@@ -1,4 +1,10 @@
+import { Metadata } from "next";
 import Link from "next/link";
+import { APP_NAME } from "@/lib/constants";
+
+export const metadata: Metadata = {
+  title: APP_NAME,
+};
 
 export default function HomePage() {
   return (
