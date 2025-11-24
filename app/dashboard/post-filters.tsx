@@ -75,7 +75,7 @@ export function PostFilters() {
 
       {/* Status Filter */}
       <div>
-        <span className="text-sm font-medium text-gray-700 mr-2">Status:</span>
+        <span className="text-sm font-medium text-text mr-2">Status:</span>
         <div className="inline-flex rounded-md shadow-sm">
           {statusOptions.map((option) => (
             <button
@@ -83,8 +83,8 @@ export function PostFilters() {
               onClick={() => updateFilter("status", option.value)}
               className={`px-3 py-1.5 text-sm font-medium border ${
                 currentStatus === option.value
-                  ? "bg-blue-600 text-white border-blue-600"
-                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                  ? "bg-primary text-white border-primary"
+                  : "bg-surface text-text border-border hover:bg-surface-hover"
               } ${
                 option.value === "all" ? "rounded-l-md" : option.value === "draft" ? "rounded-r-md" : ""
               } -ml-px first:ml-0`}
@@ -97,7 +97,7 @@ export function PostFilters() {
 
       {/* Type Filter */}
       <div>
-        <span className="text-sm font-medium text-gray-700 mr-2">Type:</span>
+        <span className="text-sm font-medium text-text mr-2">Type:</span>
         <div className="inline-flex rounded-md shadow-sm">
           {typeOptions.map((option, index) => (
             <button
@@ -105,8 +105,8 @@ export function PostFilters() {
               onClick={() => updateFilter("type", option.value)}
               className={`px-3 py-1.5 text-sm font-medium border ${
                 currentType === option.value
-                  ? "bg-blue-600 text-white border-blue-600"
-                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                  ? "bg-primary text-white border-primary"
+                  : "bg-surface text-text border-border hover:bg-surface-hover"
               } ${
                 index === 0 ? "rounded-l-md" : index === typeOptions.length - 1 ? "rounded-r-md" : ""
               } -ml-px first:ml-0`}

@@ -59,7 +59,7 @@ export async function PostsList({ page = 1, status = "all", type = "all", search
   if (totalPosts === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500 mb-4">
+        <p className="text-text-muted mb-4">
           {status === "all" && type === "all"
             ? "No posts yet. Create your first post!"
             : "No posts match your filters."}
@@ -83,18 +83,18 @@ export async function PostsList({ page = 1, status = "all", type = "all", search
         <Button href="/dashboard/posts/new" label="New Post" />
       </div>
 
-      <div className="bg-white rounded-lg shadow divide-y">
+      <div className="bg-surface rounded-lg shadow divide-y divide-border">
         {posts.map((post) => (
-          <div key={post.id} className="p-6 hover:bg-gray-50 transition">
+          <div key={post.id} className="p-6 hover:bg-surface-hover transition">
             <div className="flex items-start justify-between">
               <div className="flex-1">
-                <h3 className="text-lg font-semibold mb-1">{post.title}</h3>
+                <h3 className="text-lg font-semibold mb-1 text-text">{post.title}</h3>
                 {post.excerpt && (
-                  <p className="text-gray-600 text-sm mb-2">
+                  <p className="text-text-muted text-sm mb-2">
                     <HighlightText text={post.excerpt} search={search} />
                   </p>
                 )}
-                <div className="flex items-center gap-4 text-sm text-gray-500">
+                <div className="flex items-center gap-4 text-sm text-text-muted">
                   <span>By {post.author.name || post.author.email}</span>
                   <span>•</span>
                   <span>{new Date(post.createdAt).toLocaleDateString()}</span>
@@ -126,7 +126,7 @@ export async function PostsList({ page = 1, status = "all", type = "all", search
             disabled={page <= 1}
           />
 
-          <span className="px-4 py-2 text-sm text-gray-600">
+          <span className="px-4 py-2 text-sm text-text-muted">
             Page {page} of {totalPages}
           </span>
 

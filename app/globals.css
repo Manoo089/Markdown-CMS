@@ -1,2 +1,124 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+/* ========================================
+   DESIGN TOKEN SYSTEM
+   ======================================== */
+
+@theme {
+  /* === SURFACES === */
+  --color-background: #f9fafb; /* gray-50 */
+  --color-surface: #ffffff; /* white */
+  --color-surface-hover: #f3f4f6; /* gray-100 */
+
+  /* === TEXT === */
+  --color-text: #111827; /* gray-900 */
+  --color-text-muted: #6b7280; /* gray-500 */
+  --color-text-subtle: #9ca3af; /* gray-400 */
+
+  /* === BORDERS === */
+  --color-border: #e5e7eb; /* gray-200 */
+  --color-border-hover: #d1d5db; /* gray-300 */
+
+  /* === PRIMARY (Blue) === */
+  --color-primary: #3b82f6; /* blue-500 */
+  --color-primary-hover: #2563eb; /* blue-600 */
+  --color-primary-light: #dbeafe; /* blue-100 */
+
+  /* === SECONDARY (Gray) === */
+  --color-secondary: #6b7280; /* gray-500 */
+  --color-secondary-hover: #4b5563; /* gray-600 */
+
+  /* === SEMANTIC COLORS === */
+  --color-success: #10b981; /* green-500 */
+  --color-success-light: #d1fae5; /* green-100 */
+  --color-warning: #f59e0b; /* amber-500 */
+  --color-warning-light: #fef3c7; /* amber-100 */
+  --color-danger: #ef4444; /* red-500 */
+  --color-danger-hover: #dc2626; /* red-600 */
+  --color-danger-light: #fee2e2; /* red-100 */
+
+  /* === BADGE COLORS === */
+  /* Gray Badge (Post) */
+  --color-badge-gray-bg: #f3f4f6; /* gray-100 */
+  --color-badge-gray-text: #1f2937; /* gray-800 */
+
+  /* Blue Badge (Page) */
+  --color-badge-blue-bg: #dbeafe; /* blue-100 */
+  --color-badge-blue-text: #1e40af; /* blue-800 */
+
+  /* Purple Badge (Service) */
+  --color-badge-purple-bg: #e9d5ff; /* purple-100 */
+  --color-badge-purple-text: #6b21a8; /* purple-800 */
+
+  /* Green Badge (Published) */
+  --color-badge-green-bg: #d1fae5; /* green-100 */
+  --color-badge-green-text: #065f46; /* green-800 */
+
+  /* Yellow Badge (Draft) */
+  --color-badge-yellow-bg: #fef3c7; /* amber-100 */
+  --color-badge-yellow-text: #92400e; /* amber-800 */
+}
+
+.dark {
+  /* Surfaces */
+  --color-background: #0f172a; /* slate-900 */
+  --color-surface: #1e293b; /* slate-800 */
+  --color-surface-hover: #334155; /* slate-700 */
+
+  /* Text */
+  --color-text: #f1f5f9; /* slate-100 */
+  --color-text-muted: #cbd5e1; /* slate-300 */
+  --color-text-subtle: #94a3b8; /* slate-400 */
+
+  /* Borders */
+  --color-border: #334155; /* slate-700 */
+  --color-border-hover: #475569; /* slate-600 */
+
+  /* Primary */
+  --color-primary: #60a5fa; /* blue-400 */
+  --color-primary-hover: #3b82f6; /* blue-500 */
+  --color-primary-light: #1e3a8a; /* blue-900 */
+
+  /* Secondary */
+  --color-secondary: #94a3b8; /* slate-400 */
+  --color-secondary-hover: #cbd5e1; /* slate-300 */
+
+  /* Semantic */
+  --color-success: #34d399; /* green-400 */
+  --color-success-light: #064e3b; /* green-900 */
+  --color-warning: #fbbf24; /* amber-400 */
+  --color-warning-light: #78350f; /* amber-900 */
+  --color-danger: #f87171; /* red-400 */
+  --color-danger-hover: #ef4444; /* red-500 */
+  --color-danger-light: #7f1d1d; /* red-900 */
+
+  /* Badge Colors - Dark Mode */
+  /* Gray Badge */
+  --color-badge-gray-bg: #374151; /* gray-700 */
+  --color-badge-gray-text: #f3f4f6; /* gray-100 */
+
+  /* Blue Badge */
+  --color-badge-blue-bg: #1e3a8a; /* blue-900 */
+  --color-badge-blue-text: #dbeafe; /* blue-100 */
+
+  /* Purple Badge */
+  --color-badge-purple-bg: #581c87; /* purple-900 */
+  --color-badge-purple-text: #e9d5ff; /* purple-100 */
+
+  /* Green Badge */
+  --color-badge-green-bg: #064e3b; /* green-900 */
+  --color-badge-green-text: #d1fae5; /* green-100 */
+
+  /* Yellow Badge */
+  --color-badge-yellow-bg: #78350f; /* amber-900 */
+  --color-badge-yellow-text: #fef3c7; /* amber-100 */
+}
+
+/* === BASE STYLES === */
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text);
+  }
+}

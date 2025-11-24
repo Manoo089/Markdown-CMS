@@ -73,63 +73,63 @@ export default function Button(props: Props) {
   const styles: ButtonStyles = {
     solid: {
       primary: {
-        base: "bg-blue-600 text-white",
-        hover: "hover:bg-blue-700",
+        base: "bg-primary text-white",
+        hover: "hover:bg-primary-hover",
       },
       secondary: {
-        base: "bg-gray-600 text-white",
-        hover: "hover:bg-gray-900",
+        base: "bg-secondary text-white",
+        hover: "hover:bg-secondary-hover",
       },
       success: {
-        base: "bg-green-600 text-white",
-        hover: "hover:bg-green-700",
+        base: "bg-success text-white",
+        hover: "hover:brightness-110",
       },
       danger: {
-        base: "bg-red-600 text-white",
-        hover: "hover:bg-red-700",
+        base: "bg-danger text-white",
+        hover: "hover:bg-danger-hover",
       },
     },
     outline: {
       primary: {
-        base: "bg-transparent text-blue-600 border border-blue-600",
-        hover: "hover:text-blue-700 hover:border-blue-700",
+        base: "bg-transparent text-primary border border-primary",
+        hover: "hover:bg-primary-light hover:border-primary-hover",
       },
       secondary: {
-        base: "bg-transparent text-gray-600 border border-gray-600",
-        hover: "hover:text-gray-900 hover:border-gray-900",
+        base: "bg-transparent text-secondary border border-secondary",
+        hover: "hover:bg-surface-hover hover:border-secondary-hover",
       },
       success: {
-        base: "bg-transparent text-green-600 border border-green-600",
-        hover: "hover:text-green-700 hover:border-green-700",
+        base: "bg-transparent text-success border border-success",
+        hover: "hover:bg-success-light",
       },
       danger: {
-        base: "bg-transparent text-red-600 border border-red-600",
-        hover: "hover:text-red-700 hover:border-red-700",
+        base: "bg-transparent text-danger border border-danger",
+        hover: "hover:bg-danger-light hover:border-danger-hover",
       },
     },
     plain: {
       primary: {
-        base: "bg-transparent text-blue-600",
-        hover: "hover:text-blue-700",
+        base: "bg-transparent text-primary",
+        hover: "hover:text-primary-hover hover:underline",
       },
       secondary: {
-        base: "bg-transparent text-gray-600",
-        hover: "hover:text-gray-900",
+        base: "bg-transparent text-secondary",
+        hover: "hover:text-text",
       },
       success: {
-        base: "bg-transparent text-green-600",
-        hover: "hover:text-green-700",
+        base: "bg-transparent text-success",
+        hover: "hover:brightness-110",
       },
       danger: {
-        base: "bg-transparent text-red-600",
-        hover: "hover:text-red-700",
+        base: "bg-transparent text-danger",
+        hover: "hover:text-danger-hover",
       },
     },
   };
 
   const classes = twMerge(
     clsx(
-      "px-4 py-2 rounded font-medium transition-colors inline-block text-center cursor-pointer",
+      "px-4 py-2 rounded font-medium transition-all inline-block text-center cursor-pointer",
       styles[variant][color].base,
       !disabled && styles[variant][color].hover,
       fullWidth && "w-full",

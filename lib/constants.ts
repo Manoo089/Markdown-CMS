@@ -27,18 +27,18 @@ export interface BadgeConfig {
 export const POST_TYPE_CONFIG: Record<PostType, BadgeConfig> = {
   post: {
     label: "Blog Post",
-    bgColor: "bg-gray-100",
-    textColor: "text-gray-800",
+    bgColor: "bg-badge-gray-bg",
+    textColor: "text-badge-gray-text",
   },
   page: {
     label: "Page",
-    bgColor: "bg-blue-100",
-    textColor: "text-blue-800",
+    bgColor: "bg-badge-blue-bg",
+    textColor: "text-badge-blue-text",
   },
   service: {
     label: "Service",
-    bgColor: "bg-purple-100",
-    textColor: "text-purple-800",
+    bgColor: "bg-badge-purple-bg",
+    textColor: "text-badge-purple-text",
   },
 };
 
@@ -50,13 +50,13 @@ export type PostStatus = "published" | "draft";
 export const POST_STATUS_CONFIG: Record<PostStatus, BadgeConfig> = {
   published: {
     label: "Published",
-    bgColor: "bg-green-100",
-    textColor: "text-green-800",
+    bgColor: "bg-badge-green-bg",
+    textColor: "text-badge-green-text",
   },
   draft: {
     label: "Draft",
-    bgColor: "bg-yellow-100",
-    textColor: "text-yellow-800",
+    bgColor: "bg-badge-yellow-bg",
+    textColor: "text-badge-yellow-text",
   },
 };
 
@@ -65,6 +65,6 @@ export const POST_STATUS_CONFIG: Record<PostStatus, BadgeConfig> = {
  */
 export const DEFAULT_BADGE_CONFIG: BadgeConfig = {
   label: "Unknown",
-  bgColor: "bg-gray-100",
-  textColor: "text-gray-800",
+  bgColor: "bg-badge-gray-bg",
+  textColor: "text-badge-gray-text",
 };

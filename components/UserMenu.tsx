@@ -38,17 +38,17 @@ export function UserMenu({ name, email }: UserMenuProps) {
       {/* Avatar Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+        className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-surface-hover transition-colors"
         aria-label="User menu"
       >
         <UserAvatar name={name} email={email} size="md" />
         <div className="text-left hidden sm:block">
-          {name && <div className="text-sm font-medium text-gray-900">{name}</div>}
-          <div className="text-xs text-gray-500">{email}</div>
+          {name && <div className="text-sm font-medium text-text">{name}</div>}
+          <div className="text-xs text-text-muted">{email}</div>
         </div>
         {/* Chevron Icon */}
         <svg
-          className={`w-4 h-4 text-gray-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
+          className={`w-4 h-4 text-text-subtle transition-transform ${isOpen ? "rotate-180" : ""}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -59,26 +59,26 @@ export function UserMenu({ name, email }: UserMenuProps) {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+        <div className="absolute right-0 mt-2 w-56 bg-surface rounded-lg shadow-lg border border-border py-1 z-50">
           {/* User Info (mobile only - on desktop it's already visible) */}
-          <div className="px-4 py-3 border-b border-gray-100 sm:hidden">
-            <div className="text-sm font-medium text-gray-900">{name || "User"}</div>
-            <div className="text-xs text-gray-500 truncate">{email}</div>
+          <div className="px-4 py-3 border-b border-border sm:hidden">
+            <div className="text-sm font-medium text-text">{name || "User"}</div>
+            <div className="text-xs text-text-muted truncate">{email}</div>
           </div>
 
           <Link
             href="/dashboard/profile"
-            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+            className="block px-4 py-2 text-sm text-text hover:bg-surface-hover transition-colors"
             onClick={() => setIsOpen(false)}
           >
             My Profile
           </Link>
 
-          <hr className="my-1 border-gray-100" />
+          <hr className="my-1 border-border" />
 
           <button
             onClick={handleLogout}
-            className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+            className="w-full text-left px-4 py-2 text-sm text-danger hover:bg-danger-light transition-colors"
           >
             Sign Out
           </button>

@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { PostFilters } from "./post-filters";
 import Button from "@/ui/Button";
 import { UserMenu } from "@/components/UserMenu";
+import { ModeToggle } from "@/components/ModeToggle";
 
 interface Props {
   searchParams: Promise<{
@@ -23,8 +24,8 @@ export default async function DashboardPage({ searchParams }: Props) {
   const search = params.search || "";
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm">
+    <div className="min-h-screen bg-background">
+      <nav className="bg-surface shadow-sm border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <h1 className="text-xl font-bold">MDCMS Dashboard</h1>
@@ -37,6 +38,8 @@ export default async function DashboardPage({ searchParams }: Props) {
                 className="text-sm"
               />
 
+              <ModeToggle />
+
               <UserMenu name={session.user.name} email={session.user.email} />
             </div>
           </div>
@@ -46,7 +49,7 @@ export default async function DashboardPage({ searchParams }: Props) {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <PostFilters />
 
-        <Suspense fallback={<div>Loading posts...</div>}>
+        <Suspense fallback={<div className="text-text-muted">Loading posts...</div>}>
           <PostsList
             page={page}
             status={status}
