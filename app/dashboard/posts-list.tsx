@@ -1,11 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 
-import { DeleteButton } from "./delete-button";
-import { HighlightText } from "./highlight-text";
 import { POSTS_PER_PAGE } from "@/lib/constants";
+
 import Button from "@/ui/Button";
-import Badge from "@/ui/Badge";
+import PostCard from "@/components/PostCard";
 
 interface Props {
   page?: number;
@@ -83,36 +82,9 @@ export async function PostsList({ page = 1, status = "all", type = "all", search
         <Button href="/dashboard/posts/new" label="New Post" />
       </div>
 
-      <div className="bg-surface rounded-lg shadow divide-y divide-border">
+      <div className="bg-surface rounded-lg shadow divide-y divide-border overflow-hidden">
         {posts.map((post) => (
-          <div key={post.id} className="p-6 hover:bg-surface-hover transition">
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold mb-1 text-text">{post.title}</h3>
-                {post.excerpt && (
-                  <p className="text-text-muted text-sm mb-2">
-                    <HighlightText text={post.excerpt} search={search} />
-                  </p>
-                )}
-                <div className="flex items-center gap-4 text-sm text-text-muted">
-                  <span>By {post.author.name || post.author.email}</span>
-                  <span>•</span>
-                  <span>{new Date(post.createdAt).toLocaleDateString()}</span>
-                  <span>•</span>
-
-                  {/* Type Badge */}
-                  <Badge value={post.type} variant="type" />
-                  <span>•</span>
-                  <Badge value={post.published ? "published" : "draft"} variant="status" />
-                </div>
-              </div>
-              
-              <div className="ml-4 flex gap-3">
-                <Button href={`/dashboard/posts/${post.id}/edit`} variant="plain" label="Edit" className="text-sm" />
-                <DeleteButton postId={post.id} postTitle={post.title} />
-              </div>
-            </div>
-          </div>
+          <PostCard key={post.id} post={post} search={search} />
         ))}
       </div>
 
