@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { UserAvatar } from "@/components/UserAvatar";
 import { handleSignOut } from "@/app/dashboard/actions";
+import ChevronIcon from "@/public/chevron.svg";
 
 interface UserMenuProps {
   name?: string | null;
@@ -46,15 +47,8 @@ export function UserMenu({ name, email }: UserMenuProps) {
           {name && <div className="text-sm font-medium text-text">{name}</div>}
           <div className="text-xs text-text-muted">{email}</div>
         </div>
-        {/* Chevron Icon */}
-        <svg
-          className={`w-4 h-4 text-text-subtle transition-transform ${isOpen ? "rotate-180" : ""}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+
+        <ChevronIcon className={`w-5 h-5 text-text-subtle transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
       {/* Dropdown Menu */}
