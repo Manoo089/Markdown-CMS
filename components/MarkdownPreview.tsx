@@ -22,7 +22,12 @@ export function MarkdownPreview({ content }: Props) {
             const language = match ? match[1] : "";
 
             return !inline && language ? (
-              <SyntaxHighlighter style={vscDarkPlus} language={language} PreTag="div" {...props}>
+              <SyntaxHighlighter
+                style={vscDarkPlus}
+                language={language}
+                PreTag="div"
+                {...props}
+              >
                 {String(children).replace(/\n$/, "")}
               </SyntaxHighlighter>
             ) : (

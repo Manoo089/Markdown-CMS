@@ -21,7 +21,10 @@ export function HighlightText({ text, search }: Props) {
         // Prüfen ob dieser Teil dem Suchbegriff entspricht
         if (part.toLowerCase() === search.toLowerCase()) {
           return (
-            <mark key={index} className="bg-yellow-200 text-yellow-900 px-0.5 rounded">
+            <mark
+              key={index}
+              className="bg-yellow-200 text-yellow-900 px-0.5 rounded"
+            >
               {part}
             </mark>
           );

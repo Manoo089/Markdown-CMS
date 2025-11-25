@@ -31,10 +31,18 @@ export default function SelectField({
 
   return (
     <div className={className}>
-      <label htmlFor={id} className={clsx("block text-sm font-medium text-text", label.length > 0 && "mb-2")}>
+      <label
+        htmlFor={id}
+        className={clsx(
+          "block text-sm font-medium text-text",
+          label.length > 0 && "mb-2",
+        )}
+      >
         {label}
         {required && <span className="text-danger ml-1">*</span>}
-        {advancedLabel && <span className="text-text-subtle text-xs ml-2">{advancedLabel}</span>}
+        {advancedLabel && (
+          <span className="text-text-subtle text-xs ml-2">{advancedLabel}</span>
+        )}
       </label>
 
       <select
@@ -51,9 +59,15 @@ export default function SelectField({
         ))}
       </select>
 
-      {selectedOption?.description && <p className="text-xs text-gray-500 mt-1">{selectedOption.description}</p>}
+      {selectedOption?.description && (
+        <p className="text-xs text-gray-500 mt-1">
+          {selectedOption.description}
+        </p>
+      )}
 
-      {description && <p className="text-xs text-gray-500 mt-1">{description}</p>}
+      {description && (
+        <p className="text-xs text-gray-500 mt-1">{description}</p>
+      )}
     </div>
   );
 }

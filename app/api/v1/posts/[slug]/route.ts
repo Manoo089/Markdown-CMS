@@ -26,7 +26,11 @@ export async function GET(request: NextRequest, { params }: Props) {
   const auth = await validateApiKey(request);
 
   if ("error" in auth) {
-    return withCors(NextResponse.json({ error: auth.error }, { status: auth.status }), origin, "*");
+    return withCors(
+      NextResponse.json({ error: auth.error }, { status: auth.status }),
+      origin,
+      "*",
+    );
   }
 
   const { organization, settings } = auth;
@@ -61,8 +65,16 @@ export async function GET(request: NextRequest, { params }: Props) {
   });
 
   if (!post) {
-    return withCors(NextResponse.json({ error: "Post not found" }, { status: 404 }), origin, settings?.allowedOrigins);
+    return withCors(
+      NextResponse.json({ error: "Post not found" }, { status: 404 }),
+      origin,
+      settings?.allowedOrigins,
+    );
   }
 
-  return withCors(NextResponse.json({ data: post }), origin, settings?.allowedOrigins);
+  return withCors(
+    NextResponse.json({ data: post }),
+    origin,
+    settings?.allowedOrigins,
+  );
 }

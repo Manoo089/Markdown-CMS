@@ -29,14 +29,21 @@ export default async function ProfilePage() {
     <div className="min-h-screen bg-background">
       <Navigation>
         <div className="flex items-center gap-4">
-          <Button href="/dashboard" label="← Back to Dashboard" variant="plain" color="secondary" />
+          <Button
+            href="/dashboard"
+            label="← Back to Dashboard"
+            variant="plain"
+            color="secondary"
+          />
         </div>
       </Navigation>
 
       <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
           <h1 className="text-3xl font-bold">My Profile</h1>
-          <p className="text-text-subtle mt-2">Manage your account settings and password</p>
+          <p className="text-text-subtle mt-2">
+            Manage your account settings and password
+          </p>
         </div>
 
         <ProfileForm user={user} />

@@ -23,13 +23,21 @@ export function SettingsForm({ settings }: Props) {
   const router = useRouter();
 
   // Form State mit Defaults
-  const [siteTitle, setSiteTitle] = useState(settings?.siteTitle || "My Website");
+  const [siteTitle, setSiteTitle] = useState(
+    settings?.siteTitle || "My Website",
+  );
   const [faviconUrl, setFaviconUrl] = useState(settings?.faviconUrl || "");
   const [logoUrl, setLogoUrl] = useState(settings?.logoUrl || "");
-  const [seoTitleTemplate, setSeoTitleTemplate] = useState(settings?.seoTitleTemplate || "%s | My Website");
-  const [seoDefaultDescription, setSeoDefaultDescription] = useState(settings?.seoDefaultDescription || "");
+  const [seoTitleTemplate, setSeoTitleTemplate] = useState(
+    settings?.seoTitleTemplate || "%s | My Website",
+  );
+  const [seoDefaultDescription, setSeoDefaultDescription] = useState(
+    settings?.seoDefaultDescription || "",
+  );
   const [ogImageUrl, setOgImageUrl] = useState(settings?.ogImageUrl || "");
-  const [allowedOrigins, setAllowedOrigins] = useState(settings?.allowedOrigins || "");
+  const [allowedOrigins, setAllowedOrigins] = useState(
+    settings?.allowedOrigins || "",
+  );
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -63,7 +71,10 @@ export function SettingsForm({ settings }: Props) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-surface rounded-lg shadow p-6 space-y-8">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-surface rounded-lg shadow p-6 space-y-8"
+    >
       {/* General Settings */}
       <div>
         <h3 className="text-lg font-semibold text-text mb-4">General</h3>
@@ -158,7 +169,11 @@ export function SettingsForm({ settings }: Props) {
       </div>
 
       {/* Messages */}
-      {error && <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-md">{error}</div>}
+      {error && (
+        <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-md">
+          {error}
+        </div>
+      )}
 
       {success && (
         <div className="p-4 bg-green-50 border border-green-200 text-green-700 rounded-md">

@@ -32,7 +32,10 @@ export default function LoginForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-surface rounded-lg shadow p-6 space-y-6 border border-border">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-surface rounded-lg shadow p-6 space-y-6 border border-border"
+    >
       <InputField
         id="email"
         type="email"
@@ -51,7 +54,12 @@ export default function LoginForm() {
         fullWidth
         onChange={(e) => setPassword(e.target.value)}
       />
-      <Button type="submit" disabled={isSigningIn} label={isSigningIn ? "Signing in..." : "Sign In"} fullWidth />
+      <Button
+        type="submit"
+        disabled={isSigningIn}
+        label={isSigningIn ? "Signing in..." : "Sign In"}
+        fullWidth
+      />
 
       {error && <div className="text-danger text-sm mt-2">{error}</div>}
     </form>

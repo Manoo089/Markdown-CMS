@@ -51,7 +51,9 @@ export default async function DashboardPage({ searchParams }: Props) {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <PostFilters />
 
-        <Suspense fallback={<div className="text-text-muted">Loading posts...</div>}>
+        <Suspense
+          fallback={<div className="text-text-muted">Loading posts...</div>}
+        >
           <PostsList
             page={page}
             status={status}

@@ -25,10 +25,18 @@ export default function TextareaField({
 }: Props) {
   return (
     <div className={className}>
-      <label htmlFor={id} className={clsx("block text-sm font-medium text-text", label.length > 0 && "mb-2")}>
+      <label
+        htmlFor={id}
+        className={clsx(
+          "block text-sm font-medium text-text",
+          label.length > 0 && "mb-2",
+        )}
+      >
         {label}
         {required && <span className="text-danger ml-1">*</span>}
-        {advancedLabel && <span className="text-text-muted text-xs ml-2">{advancedLabel}</span>}
+        {advancedLabel && (
+          <span className="text-text-muted text-xs ml-2">{advancedLabel}</span>
+        )}
       </label>
 
       <textarea
@@ -39,10 +47,16 @@ export default function TextareaField({
         rows={rows ?? 4}
         disabled={disabled}
         onChange={onChange}
-        className={clsx(inputBaseStyles, fullWidth && "w-full", isMarkdown && "font-mono")}
+        className={clsx(
+          inputBaseStyles,
+          fullWidth && "w-full",
+          isMarkdown && "font-mono",
+        )}
       />
 
-      {description && <p className="text-xs text-text-subtle mt-1">{description}</p>}
+      {description && (
+        <p className="text-xs text-text-subtle mt-1">{description}</p>
+      )}
     </div>
   );
 }

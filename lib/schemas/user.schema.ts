@@ -1,12 +1,19 @@
 import { z } from "zod";
 
 export const PASSWORD_MIN_LENGTH = 8;
-export const PASSWORD_SPECIAL_CHAR_REGEX = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+export const PASSWORD_SPECIAL_CHAR_REGEX =
+  /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
 
 export const passwordSchema = z
   .string()
-  .min(PASSWORD_MIN_LENGTH, `Password must be at least ${PASSWORD_MIN_LENGTH} characters long`)
-  .regex(PASSWORD_SPECIAL_CHAR_REGEX, "Password must contain at least one special character (!@#$%^&* etc.)");
+  .min(
+    PASSWORD_MIN_LENGTH,
+    `Password must be at least ${PASSWORD_MIN_LENGTH} characters long`,
+  )
+  .regex(
+    PASSWORD_SPECIAL_CHAR_REGEX,
+    "Password must contain at least one special character (!@#$%^&* etc.)",
+  );
 
 export const updatePasswordSchema = z
   .object({

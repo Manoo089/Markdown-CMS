@@ -26,7 +26,14 @@ export default function Badge({ value, variant = "type", className }: Props) {
   }
 
   return (
-    <span className={clsx("px-2 py-1 rounded text-xs font-medium", config.bgColor, config.textColor, className)}>
+    <span
+      className={clsx(
+        "px-2 py-1 rounded text-xs font-medium",
+        config.bgColor,
+        config.textColor,
+        className,
+      )}
+    >
       {config.label}
     </span>
   );

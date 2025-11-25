@@ -43,7 +43,11 @@ export function corsHeaders(origin?: string, allowedOrigins?: string | null) {
   };
 }
 
-export function withCors(response: NextResponse, origin?: string, allowedOrigins?: string | null) {
+export function withCors(
+  response: NextResponse,
+  origin?: string,
+  allowedOrigins?: string | null,
+) {
   const headers = corsHeaders(origin, allowedOrigins);
 
   Object.entries(headers).forEach(([key, value]) => {

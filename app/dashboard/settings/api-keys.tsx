@@ -70,7 +70,9 @@ export function ApiKeys({ apiKeys }: Props) {
             API Key created! Copy it now - you won&apos;t see it again.
           </p>
           <div className="flex items-center gap-2">
-            <code className="flex-1 p-2 bg-surface border border-border rounded text-sm font-mono break-all">{newKey}</code>
+            <code className="flex-1 p-2 bg-surface border border-border rounded text-sm font-mono break-all">
+              {newKey}
+            </code>
             <Button
               type="button"
               label="Copy"
@@ -113,12 +115,21 @@ export function ApiKeys({ apiKeys }: Props) {
       ) : (
         <div className="space-y-3">
           {apiKeys.map((apiKey) => (
-            <div key={apiKey.id} className="flex items-center justify-between p-3 bg-surface border border-border rounded-md">
+            <div
+              key={apiKey.id}
+              className="flex items-center justify-between p-3 bg-surface border border-border rounded-md"
+            >
               <div>
                 <p className="font-medium text-text">{apiKey.name}</p>
                 <p className="text-sm text-text-subtle">
                   Created {new Date(apiKey.createdAt).toLocaleDateString()}
-                  {apiKey.lastUsedAt && <> · Last used {new Date(apiKey.lastUsedAt).toLocaleDateString()}</>}
+                  {apiKey.lastUsedAt && (
+                    <>
+                      {" "}
+                      · Last used{" "}
+                      {new Date(apiKey.lastUsedAt).toLocaleDateString()}
+                    </>
+                  )}
                 </p>
               </div>
               <Button

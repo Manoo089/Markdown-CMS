@@ -5,7 +5,11 @@ import { useSession } from "next-auth/react";
 import Button from "@/ui/Button";
 import InputField from "@/ui/InputField";
 import { updateProfile, updatePassword } from "./actions";
-import { updatePasswordSchema, updateProfileSchema, PASSWORD_MIN_LENGTH } from "@/lib/schemas/user.schema";
+import {
+  updatePasswordSchema,
+  updateProfileSchema,
+  PASSWORD_MIN_LENGTH,
+} from "@/lib/schemas/user.schema";
 
 type User = {
   id: string;
@@ -128,10 +132,18 @@ export function ProfileForm({ user }: Props) {
             fullWidth
           />
 
-          {profileError && <p className="text-red-600 text-sm">{profileError}</p>}
-          {profileMessage && <p className="text-green-600 text-sm">{profileMessage}</p>}
+          {profileError && (
+            <p className="text-red-600 text-sm">{profileError}</p>
+          )}
+          {profileMessage && (
+            <p className="text-green-600 text-sm">{profileMessage}</p>
+          )}
 
-          <Button type="submit" label={isSavingProfile ? "Saving..." : "Save Profile"} disabled={isSavingProfile} />
+          <Button
+            type="submit"
+            label={isSavingProfile ? "Saving..." : "Save Profile"}
+            disabled={isSavingProfile}
+          />
         </form>
       </div>
 
@@ -187,7 +199,9 @@ export function ProfileForm({ user }: Props) {
             </ul>
           )}
 
-          {passwordMessage && <p className="text-green-600 text-sm">{passwordMessage}</p>}
+          {passwordMessage && (
+            <p className="text-green-600 text-sm">{passwordMessage}</p>
+          )}
 
           <Button
             type="submit"

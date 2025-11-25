@@ -35,14 +35,21 @@ export default async function SettingsPage() {
     <div className="min-h-screen bg-background">
       <Navigation>
         <div className="flex items-center gap-4">
-          <Button href="/dashboard" label="← Back to Dashboard" variant="plain" color="secondary" />
+          <Button
+            href="/dashboard"
+            label="← Back to Dashboard"
+            variant="plain"
+            color="secondary"
+          />
         </div>
       </Navigation>
 
       <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
           <h1 className="text-3xl font-bold">Site Settings</h1>
-          <p className="text-text-muted mt-2">Configure your website appearance and SEO</p>
+          <p className="text-text-muted mt-2">
+            Configure your website appearance and SEO
+          </p>
         </div>
 
         <SettingsForm settings={settings} />

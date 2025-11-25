@@ -15,7 +15,13 @@ interface Props {
   organizationId: string;
 }
 
-export async function PostsList({ page = 1, status = "all", type = "all", search = "", organizationId }: Props) {
+export async function PostsList({
+  page = 1,
+  status = "all",
+  type = "all",
+  search = "",
+  organizationId,
+}: Props) {
   const where: Prisma.PostWhereInput = {
     organizationId,
   };
@@ -89,7 +95,13 @@ export async function PostsList({ page = 1, status = "all", type = "all", search
         ))}
       </div>
 
-      {totalPages > 1 && <TotalPages page={page} filterSuffix={filterSuffix} totalPages={totalPages} />}
+      {totalPages > 1 && (
+        <TotalPages
+          page={page}
+          filterSuffix={filterSuffix}
+          totalPages={totalPages}
+        />
+      )}
     </div>
   );
 }

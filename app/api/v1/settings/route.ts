@@ -21,13 +21,21 @@ export async function GET(request: NextRequest) {
   const auth = await validateApiKey(request);
 
   if ("error" in auth) {
-    return withCors(NextResponse.json({ error: auth.error }, { status: auth.status }), origin, "*");
+    return withCors(
+      NextResponse.json({ error: auth.error }, { status: auth.status }),
+      origin,
+      "*",
+    );
   }
 
   const { organization, settings } = auth;
 
   if (!settings) {
-    return withCors(NextResponse.json({ error: "Settings not found" }, { status: 404 }), origin, "*");
+    return withCors(
+      NextResponse.json({ error: "Settings not found" }, { status: 404 }),
+      origin,
+      "*",
+    );
   }
 
   return withCors(
@@ -49,6 +57,6 @@ export async function GET(request: NextRequest) {
       },
     }),
     origin,
-    settings.allowedOrigins
+    settings.allowedOrigins,
   );
 }

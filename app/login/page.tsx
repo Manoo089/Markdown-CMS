@@ -12,7 +12,8 @@ export default function LoginPage() {
         <div className="text-center">
           <h2 className="text-3xl font-bold">Sign-in to MDCMS</h2>
           <p className="mt-2 text-text-subtle">
-            Markdown Content Management System <br /> by <b>Hohenadl Development</b>
+            Markdown Content Management System <br /> by{" "}
+            <b>Hohenadl Development</b>
           </p>
         </div>
         <LoginForm />

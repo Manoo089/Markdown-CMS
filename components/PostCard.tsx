@@ -28,12 +28,20 @@ export default function PostCard({ post, search }: Props) {
             {/* Type Badge */}
             <Badge value={post.type} variant="type" />
             <span>•</span>
-            <Badge value={post.published ? "published" : "draft"} variant="status" />
+            <Badge
+              value={post.published ? "published" : "draft"}
+              variant="status"
+            />
           </div>
         </div>
 
         <div className="ml-4 flex gap-3">
-          <Button href={`/dashboard/posts/${post.id}/edit`} variant="plain" label="Edit" className="text-sm" />
+          <Button
+            href={`/dashboard/posts/${post.id}/edit`}
+            variant="plain"
+            label="Edit"
+            className="text-sm"
+          />
           <DeleteButton postId={post.id} postTitle={post.title} />
         </div>
       </div>

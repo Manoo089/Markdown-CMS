@@ -25,7 +25,8 @@ export function UserMenu({ name, email }: UserMenuProps) {
 
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [isOpen]);
 
@@ -48,7 +49,9 @@ export function UserMenu({ name, email }: UserMenuProps) {
           <div className="text-xs text-text-muted">{email}</div>
         </div>
 
-        <ChevronIcon className={`w-5 h-5 text-text-subtle transition-transform ${isOpen ? "rotate-180" : ""}`} />
+        <ChevronIcon
+          className={`w-5 h-5 text-text-subtle transition-transform ${isOpen ? "rotate-180" : ""}`}
+        />
       </button>
 
       {/* Dropdown Menu */}
@@ -56,7 +59,9 @@ export function UserMenu({ name, email }: UserMenuProps) {
         <div className="absolute right-0 mt-2 w-56 bg-surface rounded-lg shadow-lg border border-border py-1 z-50">
           {/* User Info (mobile only - on desktop it's already visible) */}
           <div className="px-4 py-3 border-b border-border sm:hidden">
-            <div className="text-sm font-medium text-text">{name || "User"}</div>
+            <div className="text-sm font-medium text-text">
+              {name || "User"}
+            </div>
             <div className="text-xs text-text-muted truncate">{email}</div>
           </div>
 

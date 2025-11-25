@@ -11,7 +11,9 @@ export default function HomePage() {
     <div className="min-h-screen bg-background flex items-center justify-center">
       <div className="max-w-2xl mx-auto px-4 text-center">
         <h1 className="text-4xl font-bold text-text mb-4">MDCMS API</h1>
-        <p className="text-text-subtle mb-8">Headless CMS Backend - API & Dashboard</p>
+        <p className="text-text-subtle mb-8">
+          Headless CMS Backend - API & Dashboard
+        </p>
 
         <div className="space-y-4">
           <Link

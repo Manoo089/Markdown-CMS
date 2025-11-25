@@ -67,7 +67,10 @@ export function EditPostForm({ post, organizationId }: Props) {
   };
 
   return (
-    <form className="bg-surface rounded-lg shadow p-6 space-y-6 border border-border" onSubmit={handleSubmit}>
+    <form
+      className="bg-surface rounded-lg shadow p-6 space-y-6 border border-border"
+      onSubmit={handleSubmit}
+    >
       <InputField
         id="title"
         type="text"
@@ -113,7 +116,9 @@ export function EditPostForm({ post, organizationId }: Props) {
 
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="block text-sm font-medium text-text">Content (Markdown)</label>
+          <label className="block text-sm font-medium text-text">
+            Content (Markdown)
+          </label>
           <Button
             type="button"
             label={showPreview ? "Hide Preview" : "Show Preview"}
@@ -122,7 +127,9 @@ export function EditPostForm({ post, organizationId }: Props) {
             className="text-sm text-primary hover:text-primary-hover font-medium"
           />
         </div>
-        <div className={`grid gap-4 ${showPreview ? "grid-cols-2" : "grid-cols-1"}`}>
+        <div
+          className={`grid gap-4 ${showPreview ? "grid-cols-2" : "grid-cols-1"}`}
+        >
           <TextareaField
             id="content"
             label=""
@@ -151,10 +158,18 @@ export function EditPostForm({ post, organizationId }: Props) {
         />
       </div>
 
-      {error && <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-md">{error}</div>}
+      {error && (
+        <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-md">
+          {error}
+        </div>
+      )}
 
       <div className="flex gap-4">
-        <Button type="submit" label={isSubmitting ? "Updating..." : "Update Post"} disabled={isSubmitting} />
+        <Button
+          type="submit"
+          label={isSubmitting ? "Updating..." : "Update Post"}
+          disabled={isSubmitting}
+        />
         <Button
           type="button"
           label="Cancel"

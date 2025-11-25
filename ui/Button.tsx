@@ -68,7 +68,14 @@ type Props = ButtonProps | LinkProps;
  */
 
 export default function Button(props: Props) {
-  const { className, color = "primary", disabled = false, fullWidth, label, variant = "solid" } = props;
+  const {
+    className,
+    color = "primary",
+    disabled = false,
+    fullWidth,
+    label,
+    variant = "solid",
+  } = props;
 
   const styles: ButtonStyles = {
     solid: {
@@ -134,8 +141,8 @@ export default function Button(props: Props) {
       !disabled && styles[variant][color].hover,
       fullWidth && "w-full",
       disabled && "opacity-50 cursor-not-allowed",
-      className
-    )
+      className,
+    ),
   );
 
   // Link-Variante
@@ -156,7 +163,12 @@ export default function Button(props: Props) {
 
   // Button-Variante
   return (
-    <button type={props.type} disabled={disabled} onClick={props.onClick} className={classes}>
+    <button
+      type={props.type}
+      disabled={disabled}
+      onClick={props.onClick}
+      className={classes}
+    >
       {label}
     </button>
   );

@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     return withCors(
       NextResponse.json({ error: auth.error }, { status: auth.status }),
       origin,
-      "*" // Bei Auth-Fehler Wildcard
+      "*", // Bei Auth-Fehler Wildcard
     );
   }
 
@@ -91,6 +91,6 @@ export async function GET(request: NextRequest) {
       },
     }),
     origin,
-    settings?.allowedOrigins
+    settings?.allowedOrigins,
   );
 }

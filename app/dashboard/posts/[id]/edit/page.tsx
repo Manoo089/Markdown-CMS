@@ -37,16 +37,24 @@ export default async function EditPostPage({ params }: Props) {
     <div className="min-h-screen bg-background">
       <Navigation>
         <div className="flex items-center gap-4">
-          <Button href="/dashboard" label="← Back to Dashboard" variant="plain" color="secondary" />
+          <Button
+            href="/dashboard"
+            label="← Back to Dashboard"
+            variant="plain"
+            color="secondary"
+          />
         </div>
       </Navigation>
-      
+
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
           <h1 className="text-3xl font-bold">Edit Post</h1>
           <p className="text-text-subtle mt-2">Update your content</p>
         </div>
-        <EditPostForm post={post} organizationId={session.user.organizationId} />
+        <EditPostForm
+          post={post}
+          organizationId={session.user.organizationId}
+        />
       </div>
     </div>
   );

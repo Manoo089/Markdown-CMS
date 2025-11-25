@@ -1,7 +1,10 @@
-export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "MDCMS Hohenadl Development";
+export const APP_NAME =
+  process.env.NEXT_PUBLIC_APP_NAME || "MDCMS Hohenadl Development";
 export const APP_DESCRIPTION =
-  process.env.NEXT_PUBLIC_APP_DESCRIPTION || "A Content-Management-System with Markdown for clients by Hohenadl Development.";
-export const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
+  process.env.NEXT_PUBLIC_APP_DESCRIPTION ||
+  "A Content-Management-System with Markdown for clients by Hohenadl Development.";
+export const SERVER_URL =
+  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
 
 /**
  * Number of posts displayed per page in dashboard
@@ -13,9 +16,21 @@ export const POSTS_PER_PAGE = 10;
  * Content Types in create/edit posts
  */
 export const contentTypeOptions = [
-  { value: "post", label: "Blog Post", description: "Regular blog post for /blog" },
-  { value: "page", label: "Page", description: "Static page content (e.g., homepage sections)" },
-  { value: "service", label: "Service", description: "Service offering for homepage" },
+  {
+    value: "post",
+    label: "Blog Post",
+    description: "Regular blog post for /blog",
+  },
+  {
+    value: "page",
+    label: "Page",
+    description: "Static page content (e.g., homepage sections)",
+  },
+  {
+    value: "service",
+    label: "Service",
+    description: "Service offering for homepage",
+  },
 ];
 
 /**

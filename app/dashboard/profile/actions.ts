@@ -4,7 +4,10 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import bcrypt from "bcryptjs";
-import { updatePasswordSchema, updateProfileSchema } from "@/lib/schemas/user.schema";
+import {
+  updatePasswordSchema,
+  updateProfileSchema,
+} from "@/lib/schemas/user.schema";
 
 export async function updateProfile(data: unknown) {
   try {
@@ -51,7 +54,10 @@ export async function updateProfile(data: unknown) {
   }
 }
 
-type ActionResult = { success: true } | { error: string } | { errors: string[] };
+type ActionResult =
+  | { success: true }
+  | { error: string }
+  | { errors: string[] };
 
 export async function updatePassword(data: unknown): Promise<ActionResult> {
   try {
@@ -82,7 +88,10 @@ export async function updatePassword(data: unknown): Promise<ActionResult> {
     }
 
     // Aktuelles Passwort prüfen
-    const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
+    const isCurrentPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password,
+    );
 
     if (!isCurrentPasswordValid) {
       return { error: "Current password is incorrect" };

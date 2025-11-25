@@ -16,7 +16,9 @@ export function DeleteButton({ postId, postTitle }: Props) {
 
   const handleDelete = async () => {
     // Confirmation Dialog
-    const confirmed = window.confirm(`Are you sure you want to delete "${postTitle}"? This action cannot be undone.`);
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${postTitle}"? This action cannot be undone.`,
+    );
 
     if (!confirmed) return;
 

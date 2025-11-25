@@ -86,7 +86,11 @@ export function PostFilters() {
                   ? "bg-primary text-white border-primary"
                   : "bg-surface text-text border-border hover:bg-surface-hover"
               } ${
-                option.value === "all" ? "rounded-l-md" : option.value === "draft" ? "rounded-r-md" : ""
+                option.value === "all"
+                  ? "rounded-l-md"
+                  : option.value === "draft"
+                    ? "rounded-r-md"
+                    : ""
               } -ml-px first:ml-0`}
             >
               {option.label}
@@ -108,7 +112,11 @@ export function PostFilters() {
                   ? "bg-primary text-white border-primary"
                   : "bg-surface text-text border-border hover:bg-surface-hover"
               } ${
-                index === 0 ? "rounded-l-md" : index === typeOptions.length - 1 ? "rounded-r-md" : ""
+                index === 0
+                  ? "rounded-l-md"
+                  : index === typeOptions.length - 1
+                    ? "rounded-r-md"
+                    : ""
               } -ml-px first:ml-0`}
             >
               {option.label}

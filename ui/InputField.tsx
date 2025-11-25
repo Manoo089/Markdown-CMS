@@ -28,10 +28,18 @@ export default function InputField({
 }: Props) {
   return (
     <div className={className}>
-      <label htmlFor={id} className={clsx("block text-sm font-medium text-text", label.length > 0 && "mb-2")}>
+      <label
+        htmlFor={id}
+        className={clsx(
+          "block text-sm font-medium text-text",
+          label.length > 0 && "mb-2",
+        )}
+      >
         {label}
         {required && <span className="text-danger ml-1">*</span>}
-        {advancedLabel && <span className="text-text-subtle text-xs ml-2">{advancedLabel}</span>}
+        {advancedLabel && (
+          <span className="text-text-subtle text-xs ml-2">{advancedLabel}</span>
+        )}
       </label>
 
       {startAddon ? (
@@ -62,7 +70,9 @@ export default function InputField({
           className={clsx(inputBaseStyles, fullWidth && "w-full")}
         />
       )}
-      {description && <p className="text-xs text-text-muted mt-1">{description}</p>}
+      {description && (
+        <p className="text-xs text-text-muted mt-1">{description}</p>
+      )}
     </div>
   );
 }
