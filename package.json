@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "format:check": "prettier \"./**/*.{scss,js,jsx,ts,tsx}\" --check",
+    "format": "prettier \"./**/*.{scss,js,jsx,ts,tsx}\" --write"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
@@ -38,6 +40,7 @@
     "clsx": "^2.1.1",
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
+    "prettier": "^3.6.2",
     "prisma": "^6.19.0",
     "tailwindcss": "^4",
     "tsx": "^4.20.6",
