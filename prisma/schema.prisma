@@ -4,7 +4,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Organization {
@@ -29,6 +28,7 @@ model User {
   emailVerified  DateTime?
   image          String?
   organizationId String
+  isAdmin        Boolean      @default(false)
   accounts       Account[]
   posts          Post[]
   sessions       Session[]
