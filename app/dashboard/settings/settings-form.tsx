@@ -6,6 +6,8 @@ import { updateSettings } from "./actions";
 import Button from "@/ui/Button";
 import InputField from "@/ui/InputField";
 import TextareaField from "@/ui/TextareaField";
+import { useActionState } from "@/hooks/useActionState";
+import { FieldError, MessageAlert } from "@/components/MessageAlert";
 
 interface Props {
   settings: {
@@ -39,42 +41,33 @@ export function SettingsForm({ settings }: Props) {
     settings?.allowedOrigins || "",
   );
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
+  const settingsAction = useActionState();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setError("");
-    setSuccess(false);
 
-    const result = await updateSettings({
-      siteTitle,
-      faviconUrl: faviconUrl || undefined,
-      logoUrl: logoUrl || undefined,
-      seoTitleTemplate,
-      seoDefaultDescription: seoDefaultDescription || undefined,
-      ogImageUrl: ogImageUrl || undefined,
-      allowedOrigins: allowedOrigins || undefined,
-    });
-
-    if (result.error) {
-      setError(result.error);
-      setIsSubmitting(false);
-      return;
-    }
-
-    setSuccess(true);
-    setIsSubmitting(false);
-    router.refresh();
+    await settingsAction.execute(
+      updateSettings,
+      {
+        siteTitle,
+        faviconUrl: faviconUrl || undefined,
+        logoUrl: logoUrl || undefined,
+        seoTitleTemplate,
+        seoDefaultDescription: seoDefaultDescription || undefined,
+        ogImageUrl: ogImageUrl || undefined,
+        allowedOrigins: allowedOrigins || undefined,
+      },
+      {
+        successMessage: "Settings saved successfully!",
+        onSuccess: () => {
+          router.refresh();
+        },
+      },
+    );
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-surface rounded-lg shadow p-6 space-y-8"
-    >
+    <form onSubmit={handleSubmit} className="space-y-4">
       {/* General Settings */}
       <div>
         <h3 className="text-lg font-semibold text-text mb-4">General</h3>
@@ -88,6 +81,7 @@ export function SettingsForm({ settings }: Props) {
             fullWidth
             onChange={(e) => setSiteTitle(e.target.value)}
           />
+          <FieldError error={settingsAction.fieldErrors.siteTitle} />
 
           <InputField
             id="logoUrl"
@@ -98,6 +92,7 @@ export function SettingsForm({ settings }: Props) {
             fullWidth
             onChange={(e) => setLogoUrl(e.target.value)}
           />
+          <FieldError error={settingsAction.fieldErrors.logoUrl} />
 
           <InputField
             id="faviconUrl"
@@ -108,6 +103,7 @@ export function SettingsForm({ settings }: Props) {
             fullWidth
             onChange={(e) => setFaviconUrl(e.target.value)}
           />
+          <FieldError error={settingsAction.fieldErrors.faviconUrl} />
         </div>
       </div>
 
@@ -126,6 +122,7 @@ export function SettingsForm({ settings }: Props) {
             fullWidth
             onChange={(e) => setSeoTitleTemplate(e.target.value)}
           />
+          <FieldError error={settingsAction.fieldErrors.seoTitleTemplate} />
 
           <TextareaField
             id="seoDefaultDescription"
@@ -135,6 +132,9 @@ export function SettingsForm({ settings }: Props) {
             rows={3}
             fullWidth
             onChange={(e) => setSeoDefaultDescription(e.target.value)}
+          />
+          <FieldError
+            error={settingsAction.fieldErrors.seoDefaultDescription}
           />
 
           <InputField
@@ -147,6 +147,7 @@ export function SettingsForm({ settings }: Props) {
             fullWidth
             onChange={(e) => setOgImageUrl(e.target.value)}
           />
+          <FieldError error={settingsAction.fieldErrors.ogImageUrl} />
         </div>
       </div>
 
@@ -165,28 +166,20 @@ export function SettingsForm({ settings }: Props) {
             fullWidth
             onChange={(e) => setAllowedOrigins(e.target.value)}
           />
+          <FieldError error={settingsAction.fieldErrors.allowedOrigins} />
         </div>
       </div>
 
-      {/* Messages */}
-      {error && (
-        <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-md">
-          {error}
-        </div>
-      )}
+      <MessageAlert
+        message={settingsAction.message}
+        onDismiss={settingsAction.clearErrors}
+      />
 
-      {success && (
-        <div className="p-4 bg-green-50 border border-green-200 text-green-700 rounded-md">
-          Settings saved successfully!
-        </div>
-      )}
-
-      {/* Submit */}
       <div>
         <Button
           type="submit"
-          label={isSubmitting ? "Saving..." : "Save Settings"}
-          disabled={isSubmitting}
+          label={settingsAction.isLoading ? "Saving..." : "Save Settings"}
+          disabled={settingsAction.isLoading}
           variant="solid"
           color="primary"
         />

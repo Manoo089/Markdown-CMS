@@ -5,6 +5,8 @@ import { addUserToOrganization } from "./actions";
 import Button from "@/ui/Button";
 import InputField from "@/ui/InputField";
 import CheckboxField from "@/ui/CheckboxField";
+import { useActionState } from "@/hooks/useActionState";
+import { MessageAlert, FieldError } from "@/components/MessageAlert";
 
 interface Props {
   organizationId: string;
@@ -16,42 +18,51 @@ export function AddUserForm({ organizationId }: Props) {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
+
+  const addUserAction = useActionState<
+    {
+      organizationId: string;
+      email: string;
+      name: string | null;
+      password: string;
+      isAdmin: boolean;
+    },
+    void
+  >();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setMessage(null);
+    await addUserAction.execute(
+      addUserToOrganization,
+      {
+        organizationId,
+        email,
+        name: name || null,
+        password,
+        isAdmin,
+      },
+      {
+        successMessage: "User created successfully!",
+        onSuccess: () => {
+          // Reset form
+          setEmail("");
+          setName("");
+          setPassword("");
+          setIsAdmin(false);
 
-    const result = await addUserToOrganization(organizationId, {
-      email,
-      name: name || null,
-      password,
-      isAdmin,
-    });
+          // Close form after 2 seconds
+          setTimeout(() => {
+            setIsOpen(false);
+            addUserAction.clearErrors();
+          }, 2000);
+        },
+      },
+    );
+  };
 
-    setIsLoading(false);
-
-    if (result.error) {
-      setMessage({ type: "error", text: result.error });
-    } else {
-      setMessage({ type: "success", text: "User created successfully!" });
-      // Reset form
-      setEmail("");
-      setName("");
-      setPassword("");
-      setIsAdmin(false);
-
-      // Close form after 2 seconds
-      setTimeout(() => {
-        setIsOpen(false);
-        setMessage(null);
-      }, 2000);
-    }
+  const handleClose = () => {
+    setIsOpen(false);
+    addUserAction.clearErrors();
   };
 
   if (!isOpen) {
@@ -70,10 +81,7 @@ export function AddUserForm({ organizationId }: Props) {
       <div className="flex justify-between items-center mb-4">
         <h4 className="font-bold text-lg">Add New User</h4>
         <button
-          onClick={() => {
-            setIsOpen(false);
-            setMessage(null);
-          }}
+          onClick={handleClose}
           className="text-text-muted hover:text-text"
         >
           ✕
@@ -81,6 +89,11 @@ export function AddUserForm({ organizationId }: Props) {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        <MessageAlert
+          message={addUserAction.message}
+          onDismiss={addUserAction.clearErrors}
+        />
+
         <InputField
           id="email"
           label="Email"
@@ -90,6 +103,7 @@ export function AddUserForm({ organizationId }: Props) {
           placeholder="user@example.com"
           required
         />
+        <FieldError error={addUserAction.fieldErrors.email} />
 
         <InputField
           id="name"
@@ -99,6 +113,7 @@ export function AddUserForm({ organizationId }: Props) {
           onChange={(e) => setName(e.target.value)}
           placeholder="John Doe"
         />
+        <FieldError error={addUserAction.fieldErrors.name} />
 
         <InputField
           id="password"
@@ -110,39 +125,24 @@ export function AddUserForm({ organizationId }: Props) {
           description="User can change this later"
           required
         />
+        <FieldError error={addUserAction.fieldErrors.password} />
 
         <CheckboxField
           id="privileges"
           label="Grant Admin privileges"
           checked={isAdmin}
           onChange={(e) => setIsAdmin(e.target.checked)}
-          //   helpText="Admins can access the admin panel and manage all organizations"
         />
-
-        {message && (
-          <div
-            className={`p-4 rounded ${
-              message.type === "success"
-                ? "bg-green-50 dark:bg-green-900/30 text-green-800 dark:text-green-200"
-                : "bg-red-50 dark:bg-red-900/30 text-red-800 dark:text-red-200"
-            }`}
-          >
-            {message.text}
-          </div>
-        )}
 
         <div className="flex gap-2">
           <Button
             type="submit"
-            label={isLoading ? "Creating..." : "Create User"}
-            disabled={isLoading}
+            label={addUserAction.isLoading ? "Creating..." : "Create User"}
+            disabled={addUserAction.isLoading}
           />
           <Button
             type="button"
-            onClick={() => {
-              setIsOpen(false);
-              setMessage(null);
-            }}
+            onClick={handleClose}
             label="Cancel"
             variant="outline"
           />

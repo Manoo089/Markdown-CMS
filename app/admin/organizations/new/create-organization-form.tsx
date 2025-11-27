@@ -5,13 +5,16 @@ import { useRouter } from "next/navigation";
 import { createOrganization } from "./actions";
 import Button from "@/ui/Button";
 import InputField from "@/ui/InputField";
+import { useActionState } from "@/hooks/useActionState";
+import { FieldError, MessageAlert } from "@/components/MessageAlert";
 
 export function CreateOrganizationForm() {
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+
   const router = useRouter();
+
+  const createAction = useActionState<{ name: string; slug: string }, string>();
 
   // Auto-generate slug from name
   const handleNameChange = (value: string) => {
@@ -30,22 +33,27 @@ export function CreateOrganizationForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError(null);
 
-    const result = await createOrganization({ name, slug });
-
-    setIsLoading(false);
-
-    if (result.error) {
-      setError(result.error);
-    } else if (result.organizationId) {
-      router.push(`/admin/organizations/${result.organizationId}`);
-    }
+    await createAction.execute(
+      createOrganization,
+      { name, slug },
+      {
+        successMessage: "Organization created successfully!",
+        onSuccess: (organizationId: string) => {
+          // Redirect to organization detail page
+          router.push(`/admin/organizations/${organizationId}`);
+        },
+      },
+    );
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      <MessageAlert
+        message={createAction.message}
+        onDismiss={createAction.clearErrors}
+      />
+
       <InputField
         id="organization_name"
         type="text"
@@ -56,6 +64,7 @@ export function CreateOrganizationForm() {
         description="The display name of the organization"
         required
       />
+      <FieldError error={createAction.fieldErrors.name} />
 
       <InputField
         id="slug"
@@ -67,18 +76,13 @@ export function CreateOrganizationForm() {
         description="Used in URLs and API requests. Only lowercase letters, numbers, and hyphens."
         required
       />
-
-      {error && (
-        <div className="p-4 rounded bg-red-50 dark:bg-red-900/30 text-red-800 dark:text-red-200">
-          {error}
-        </div>
-      )}
+      <FieldError error={createAction.fieldErrors.slug} />
 
       <div className="pt-4">
         <Button
           type="submit"
-          label={isLoading ? "Creating..." : "Create Organization"}
-          disabled={isLoading || !name || !slug}
+          label={createAction.isLoading ? "Creating..." : "Create Organization"}
+          disabled={createAction.isLoading || !name || !slug}
         />
       </div>
     </form>

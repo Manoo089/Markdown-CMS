@@ -11,6 +11,8 @@ import InputField from "@/ui/InputField";
 import TextareaField from "@/ui/TextareaField";
 import SelectField from "@/ui/SelectField";
 import CheckboxField from "@/ui/CheckboxField";
+import { useMessage } from "@/hooks/useActionState";
+import { MessageAlert } from "@/components/MessageAlert";
 
 interface Props {
   post: {
@@ -35,15 +37,15 @@ export function EditPostForm({ post, organizationId }: Props) {
   const [type, setType] = useState(post.type);
   const [published, setPublished] = useState(post.published);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
   const [showPreview, setShowPreview] = useState(true);
 
+  const { message, showError, clearMessage } = useMessage();
   const slug = manualSlug || generateSlug(title);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError("");
+    clearMessage();
 
     const result = await updatePost({
       postId: post.id,
@@ -57,7 +59,7 @@ export function EditPostForm({ post, organizationId }: Props) {
     });
 
     if (result.error) {
-      setError(result.error);
+      showError(result.error);
       setIsSubmitting(false);
       return;
     }
@@ -158,11 +160,7 @@ export function EditPostForm({ post, organizationId }: Props) {
         />
       </div>
 
-      {error && (
-        <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-md">
-          {error}
-        </div>
-      )}
+      <MessageAlert message={message} onDismiss={clearMessage} />
 
       <div className="flex gap-4">
         <Button

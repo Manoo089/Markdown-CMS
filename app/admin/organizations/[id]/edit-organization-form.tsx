@@ -4,6 +4,8 @@ import { useState } from "react";
 import { updateOrganization } from "./actions";
 import Button from "@/ui/Button";
 import InputField from "@/ui/InputField";
+import { useActionState } from "@/hooks/useActionState";
+import { MessageAlert, FieldError } from "@/components/MessageAlert";
 
 interface Props {
   organization: {
@@ -13,36 +15,38 @@ interface Props {
   };
 }
 
-export function OrganizationEditForm({ organization }: Props) {
+export function EditOrganizationForm({ organization }: Props) {
   const [name, setName] = useState(organization.name);
   const [slug, setSlug] = useState(organization.slug);
-  const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
+
+  const updateAction = useActionState<
+    { organizationId: string; name: string; slug: string },
+    void
+  >();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setMessage(null);
 
-    const result = await updateOrganization(organization.id, { name, slug });
-
-    setIsLoading(false);
-
-    if (result.error) {
-      setMessage({ type: "error", text: result.error });
-    } else {
-      setMessage({
-        type: "success",
-        text: "Organization updated successfully!",
-      });
-    }
+    await updateAction.execute(
+      updateOrganization,
+      {
+        organizationId: organization.id,
+        name,
+        slug,
+      },
+      {
+        successMessage: "Organization updated successfully!",
+      },
+    );
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      <MessageAlert
+        message={updateAction.message}
+        onDismiss={updateAction.clearErrors}
+      />
+
       <InputField
         id="organization_name"
         type="text"
@@ -52,6 +56,7 @@ export function OrganizationEditForm({ organization }: Props) {
         placeholder="Acme Inc."
         required
       />
+      <FieldError error={updateAction.fieldErrors.name} />
 
       <InputField
         id="slug"
@@ -63,23 +68,12 @@ export function OrganizationEditForm({ organization }: Props) {
         description="Used in URLs and API requests"
         required
       />
-
-      {message && (
-        <div
-          className={`p-4 rounded ${
-            message.type === "success"
-              ? "bg-green-50 dark:bg-green-900/30 text-green-800 dark:text-green-200"
-              : "bg-red-50 dark:bg-red-900/30 text-red-800 dark:text-red-200"
-          }`}
-        >
-          {message.text}
-        </div>
-      )}
+      <FieldError error={updateAction.fieldErrors.slug} />
 
       <Button
         type="submit"
-        label={isLoading ? "Saving..." : "Save Changes"}
-        disabled={isLoading}
+        label={updateAction.isLoading ? "Saving..." : "Save Changes"}
+        disabled={updateAction.isLoading}
       />
     </form>
   );

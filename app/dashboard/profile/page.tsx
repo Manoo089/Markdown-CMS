@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { ProfileForm } from "./profile-form";
 import Button from "@/ui/Button";
 import Navigation from "@/components/Navigation";
+import PasswordForm from "./password-form";
 
 export const metadata: Metadata = {
   title: "My Profile",
@@ -45,8 +46,13 @@ export default async function ProfilePage() {
             Manage your account settings and password
           </p>
         </div>
+        <div className="bg-surface rounded-lg shadow p-6">
+          <div className="space-y-8">
+            <ProfileForm user={user} />
 
-        <ProfileForm user={user} />
+            <PasswordForm />
+          </div>
+        </div>
       </main>
     </div>
   );

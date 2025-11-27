@@ -6,7 +6,7 @@ import Navigation from "@/components/Navigation";
 import Button from "@/ui/Button";
 import { UserMenu } from "@/components/UserMenu";
 import { ModeToggle } from "@/components/ModeToggle";
-import { OrganizationEditForm } from "./organization-edit-form";
+import { EditOrganizationForm } from "./edit-organization-form";
 import { DeleteOrganizationButton } from "./delete-organization-button";
 import { AddUserForm } from "./add-user-form";
 import { UserActionsMenu } from "./user-actions-menu";
@@ -129,7 +129,7 @@ export default async function OrganizationDetailPage({ params }: Props) {
         {/* Edit Form */}
         <div className="bg-surface rounded-lg p-6 shadow border border-border">
           <h3 className="text-xl font-bold mb-4">Organization Settings</h3>
-          <OrganizationEditForm organization={organization} />
+          <EditOrganizationForm organization={organization} />
         </div>
 
         {/* Users List */}

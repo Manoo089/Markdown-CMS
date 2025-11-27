@@ -1,20 +1,23 @@
 "use client";
 
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { MessageAlert } from "@/components/MessageAlert";
+import { useMessage } from "@/hooks/useActionState";
 import Button from "@/ui/Button";
 import InputField from "@/ui/InputField";
-import { signIn } from "next-auth/react";
-import { useState } from "react";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [isSigningIn, setIsSigningIn] = useState(false);
+
+  const { message, showError, clearMessage } = useMessage();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSigningIn(true);
-    setError("");
+    clearMessage();
 
     const result = await signIn("credentials", {
       email,
@@ -23,7 +26,7 @@ export default function LoginForm() {
     });
 
     if (result?.error) {
-      setError("Invalid email or password");
+      showError("Invalid email or password");
       setIsSigningIn(false);
       return;
     }
@@ -36,6 +39,8 @@ export default function LoginForm() {
       onSubmit={handleSubmit}
       className="bg-surface rounded-lg shadow p-6 space-y-6 border border-border"
     >
+      <MessageAlert message={message} onDismiss={clearMessage} />
+
       <InputField
         id="email"
         type="email"
@@ -60,8 +65,6 @@ export default function LoginForm() {
         label={isSigningIn ? "Signing in..." : "Sign In"}
         fullWidth
       />
-
-      {error && <div className="text-danger text-sm mt-2">{error}</div>}
     </form>
   );
 }

@@ -6,6 +6,7 @@ import { SettingsForm } from "./settings-form";
 import { ApiKeys } from "./api-keys";
 import Button from "@/ui/Button";
 import Navigation from "@/components/Navigation";
+import { Box } from "@/ui/Box";
 
 export const metadata: Metadata = {
   title: "Site Settings",
@@ -52,8 +53,10 @@ export default async function SettingsPage() {
           </p>
         </div>
 
-        <SettingsForm settings={settings} />
-        <ApiKeys apiKeys={apiKeys} />
+        <Box>
+          <SettingsForm settings={settings} />
+          <ApiKeys apiKeys={apiKeys} />
+        </Box>
       </main>
     </div>
   );

@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 import { createPost } from "./actions";
 import { generateSlug } from "@/lib/slug-utils";
 import { contentTypeOptions } from "@/lib/constants";
+import { useMessage } from "@/hooks/useActionState";
 import { MarkdownPreview } from "@/components/MarkdownPreview";
+import { MessageAlert } from "@/components/MessageAlert";
 import Button from "@/ui/Button";
 import InputField from "@/ui/InputField";
 import TextareaField from "@/ui/TextareaField";
@@ -26,15 +28,15 @@ export function PostForm({ userId, organizationId }: Props) {
   const [type, setType] = useState("post");
   const [published, setPublished] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
   const [showPreview, setShowPreview] = useState(true);
 
+  const { message, showError, clearMessage } = useMessage();
   const slug = manualSlug || generateSlug(title);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError("");
+    clearMessage();
 
     const result = await createPost({
       title,
@@ -48,7 +50,7 @@ export function PostForm({ userId, organizationId }: Props) {
     });
 
     if (result.error) {
-      setError(result.error);
+      showError(result.error);
       setIsSubmitting(false);
       return;
     }
@@ -147,11 +149,7 @@ export function PostForm({ userId, organizationId }: Props) {
         onChange={(e) => setPublished(e.target.checked)}
       />
 
-      {error && (
-        <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-md">
-          {error}
-        </div>
-      )}
+      <MessageAlert message={message} onDismiss={clearMessage} />
 
       <div className="flex gap-4">
         <Button

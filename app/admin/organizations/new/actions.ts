@@ -3,45 +3,77 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/admin/admin-auth";
+import { z } from "zod";
+import { createAction } from "@/lib/action-utils";
+import { ActionResult, error, ErrorCode } from "@/lib/errors";
 
-export async function createOrganization(data: { name: string; slug: string }) {
+// ============================================================================
+// VALIDATION SCHEMAS
+// ============================================================================
+
+const createOrganizationSchema = z.object({
+  name: z.string().min(1, "Organization name is required"),
+  slug: z
+    .string()
+    .min(1, "Slug is required")
+    .regex(
+      /^[a-z0-9-]+$/,
+      "Slug must only contain lowercase letters, numbers, and hyphens",
+    ),
+});
+
+type CreateOrganizationInput = z.infer<typeof createOrganizationSchema>;
+
+// ============================================================================
+// CREATE ORGANIZATION ACTION
+// ============================================================================
+
+export async function createOrganization(
+  input: unknown,
+): Promise<ActionResult<string>> {
+  // Check admin access first
   try {
     await requireAdmin();
+  } catch (err) {
+    return error(
+      "Unauthorized - Admin access required",
+      ErrorCode.UNAUTHORIZED,
+    );
+  }
 
-    // Validierung
-    if (!data.name || !data.slug) {
-      return { error: "Name and slug are required" };
-    }
+  const action = createAction<CreateOrganizationInput, string>(
+    createOrganizationSchema,
+    async (data) => {
+      // Check if slug already exists
+      const existing = await prisma.organization.findUnique({
+        where: { slug: data.slug },
+      });
 
-    // Prüfen ob Slug bereits existiert
-    const existing = await prisma.organization.findUnique({
-      where: { slug: data.slug },
-    });
+      if (existing) {
+        throw new Error("Slug is already in use");
+      }
 
-    if (existing) {
-      return { error: "Slug is already in use" };
-    }
-
-    // Organization erstellen mit Default Settings
-    const organization = await prisma.organization.create({
-      data: {
-        name: data.name,
-        slug: data.slug,
-        settings: {
-          create: {
-            siteTitle: data.name,
-            seoTitleTemplate: `%s | ${data.name}`,
+      // Create organization with default settings
+      const organization = await prisma.organization.create({
+        data: {
+          name: data.name,
+          slug: data.slug,
+          settings: {
+            create: {
+              siteTitle: data.name,
+              seoTitleTemplate: `%s | ${data.name}`,
+            },
           },
         },
-      },
-    });
+      });
 
-    revalidatePath("/admin/organizations");
-    revalidatePath("/admin");
+      revalidatePath("/admin/organizations");
+      revalidatePath("/admin");
 
-    return { success: true, organizationId: organization.id };
-  } catch (error) {
-    console.error("Failed to create organization:", error);
-    return { error: "Failed to create organization" };
-  }
+      // Return organization ID for redirect
+      return organization.id;
+    },
+  );
+
+  return action(input);
 }

@@ -5,6 +5,7 @@ import Button from "@/ui/Button";
 import { UserMenu } from "@/components/UserMenu";
 import { ModeToggle } from "@/components/ModeToggle";
 import { CreateOrganizationForm } from "./create-organization-form";
+import { Box } from "@/ui/Box";
 
 export const metadata: Metadata = {
   title: "New Organization - Admin",
@@ -40,9 +41,9 @@ export default async function NewOrganizationPage() {
           </p>
         </div>
 
-        <div className="bg-surface rounded-lg p-6 shadow border border-border">
+        <Box>
           <CreateOrganizationForm />
-        </div>
+        </Box>
       </main>
     </div>
   );
