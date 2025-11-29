@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { AuthContext } from "./action-utils";
 
 /**
  * Server-seitiger Auth-Check für protected pages
@@ -16,8 +17,27 @@ export async function requireAuth() {
 }
 
 /**
- * Optional: Auth-Check ohne Redirect (gibt null zurück)
+ * Auth-Check without redirect (return null)
  */
 export async function getSession() {
   return await auth();
+}
+
+/**
+ * Get AuthContext from session for authenticated actions
+ * Returns null if user is not authenticated or missing required fields
+ */
+export async function getAuthContext(): Promise<AuthContext | null> {
+  const session = await auth();
+
+  if (!session?.user?.id || !session?.user?.organizationId) {
+    return null;
+  }
+
+  return {
+    userId: session.user.id,
+    userEmail: session.user.email || "",
+    organizationId: session.user.organizationId,
+    isAdmin: session.user.isAdmin || false,
+  };
 }
