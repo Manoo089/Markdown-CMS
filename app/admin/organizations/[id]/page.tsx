@@ -172,7 +172,6 @@ export default async function OrganizationDetailPage({ params }: Props) {
                       userName={user.name || ""}
                       userEmail={user.email}
                       isAdmin={user.isAdmin}
-                      organizationId={organization.id}
                     />
                   </div>
                 </div>
