@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { APP_NAME } from "@/lib/constants";
+import { APP_NAME } from "@/lib/constants/app";
 
 export const metadata: Metadata = {
   title: APP_NAME,
