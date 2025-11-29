@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { deleteOrganization } from "./actions";
 import { useRouter } from "next/navigation";
+import { deleteOrganization } from "./actions";
 import Button from "@/ui/Button";
 import { useActionState } from "@/hooks/useActionState";
 import { MessageAlert } from "@/components/MessageAlert";
@@ -20,20 +20,24 @@ export function DeleteOrganizationButton({
   const [confirmText, setConfirmText] = useState("");
 
   const router = useRouter();
-  const deleteAction = useActionState<string, void>();
+  const deleteAction = useActionState<{ organizationId: string }, void>();
 
   const handleDelete = async () => {
     if (confirmText !== organizationName) {
       return;
     }
 
-    await deleteAction.execute(deleteOrganization, organizationId, {
-      successMessage: "Organization deleted successfully!",
-      onSuccess: () => {
-        // Redirect to organizations list
-        router.push("/admin/organizations");
+    await deleteAction.execute(
+      deleteOrganization,
+      { organizationId },
+      {
+        successMessage: "Organization deleted successfully!",
+        onSuccess: () => {
+          // Redirect to organizations list
+          router.push("/admin/organizations");
+        },
       },
-    });
+    );
   };
 
   const handleCancel = () => {

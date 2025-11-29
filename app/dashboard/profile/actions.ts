@@ -3,22 +3,19 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
-import {
-  updatePasswordSchema,
-  updateProfileSchema,
-} from "@/lib/schemas/user.schema";
 import { createAuthenticatedAction } from "@/lib/action-utils";
 import { ActionResult, error, ErrorCode } from "@/lib/errors";
 import { getAuthContext } from "@/lib/auth-utils";
+import {
+  updatePasswordSchema,
+  updateProfileSchema,
+  type UpdatePasswordInput,
+  type UpdateProfileInput,
+} from "@/lib/schemas";
 
 // ============================================================================
 // UPDATE PROFILE ACTION
 // ============================================================================
-
-type UpdateProfileInput = {
-  name: string | null;
-  email: string;
-};
 
 export async function updateProfile(
   input: unknown,
@@ -65,12 +62,6 @@ export async function updateProfile(
 // ============================================================================
 // UPDATE PASSWORD ACTION
 // ============================================================================
-
-type UpdatePasswordInput = {
-  currentPassword: string;
-  newPassword: string;
-  confirmPassword: string;
-};
 
 export async function updatePassword(
   input: unknown,

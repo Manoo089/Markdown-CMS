@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import { deleteUser, toggleUserAdmin } from "./actions";
+import { isError, getErrorMessage } from "@/lib/errors";
 
 interface Props {
   userId: string;
   userName: string;
   userEmail: string;
   isAdmin: boolean;
-  organizationId: string;
 }
 
 export function UserActionsMenu({
@@ -16,7 +16,6 @@ export function UserActionsMenu({
   userName,
   userEmail,
   isAdmin,
-  organizationId,
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -24,21 +23,27 @@ export function UserActionsMenu({
 
   const handleToggleAdmin = async () => {
     setIsLoading(true);
-    const result = await toggleUserAdmin(userId, !isAdmin);
+    const result = await toggleUserAdmin({ userId, isAdmin: !isAdmin });
     setIsLoading(false);
 
-    if (result.error) {
-      alert(result.error);
+    if (isError(result)) {
+      const errorMessage = getErrorMessage(result);
+      if (errorMessage) {
+        alert(errorMessage);
+      }
     }
     setIsOpen(false);
   };
 
   const handleDelete = async () => {
     setIsLoading(true);
-    const result = await deleteUser(userId);
+    const result = await deleteUser({ userId });
 
-    if (result.error) {
-      alert(result.error);
+    if (isError(result)) {
+      const errorMessage = getErrorMessage(result);
+      if (errorMessage) {
+        alert(errorMessage);
+      }
       setIsLoading(false);
     }
     // Success - page will revalidate

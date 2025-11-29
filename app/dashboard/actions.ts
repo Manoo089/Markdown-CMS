@@ -6,10 +6,7 @@ import { signOut } from "@/lib/auth";
 import { getAuthContext } from "@/lib/auth-utils";
 import { createAuthenticatedAction } from "@/lib/action-utils";
 import { ActionResult, error, ErrorCode } from "@/lib/errors";
-import {
-  deletePostSchema,
-  type DeletePostInput,
-} from "@/lib/schemas/post.schema";
+import { deletePostSchema, type DeletePostInput } from "@/lib/schemas";
 
 export async function handleSignOut() {
   await signOut({ redirectTo: "/login" });

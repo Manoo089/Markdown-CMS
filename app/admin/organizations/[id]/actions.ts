@@ -4,120 +4,20 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/admin/admin-auth";
 import bcrypt from "bcryptjs";
-import { z } from "zod";
 import { createAction } from "@/lib/action-utils";
 import { ActionResult, error, ErrorCode } from "@/lib/errors";
-
-// ============================================================================
-// VALIDATION SCHEMAS
-// ============================================================================
-
-const createOrganizationSchema = z.object({
-  name: z.string().min(1, "Organization name is required"),
-  slug: z
-    .string()
-    .min(1, "Slug is required")
-    .regex(
-      /^[a-z0-9-]+$/,
-      "Slug must only contain lowercase letters, numbers, and hyphens",
-    ),
-});
-
-const updateOrganizationSchema = z.object({
-  organizationId: z.string().min(1, "Organization ID is required"),
-  name: z.string().min(1, "Organization name is required"),
-  slug: z
-    .string()
-    .min(1, "Slug is required")
-    .regex(
-      /^[a-z0-9-]+$/,
-      "Slug must only contain lowercase letters, numbers, and hyphens",
-    ),
-});
-
-const deleteOrganizationSchema = z
-  .string()
-  .min(1, "Organization ID is required");
-
-const addUserSchema = z.object({
-  organizationId: z.string().min(1, "Organization ID is required"),
-  email: z.string().email("Invalid email address"),
-  name: z.string().nullable(),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-  isAdmin: z.boolean(),
-});
-
-const deleteUserSchema = z.string().min(1, "User ID is required");
-
-const toggleUserAdminSchema = z.object({
-  userId: z.string().min(1, "User ID is required"),
-  isAdmin: z.boolean(),
-});
-
-// ============================================================================
-// TYPE DEFINITIONS
-// ============================================================================
-
-type CreateOrganizationInput = z.infer<typeof createOrganizationSchema>;
-type UpdateOrganizationInput = z.infer<typeof updateOrganizationSchema>;
-type AddUserInput = z.infer<typeof addUserSchema>;
-type ToggleUserAdminInput = z.infer<typeof toggleUserAdminSchema>;
-
-// ============================================================================
-// CREATE ORGANIZATION ACTION
-// ============================================================================
-
-export async function createOrganization(
-  input: unknown,
-): Promise<ActionResult<string>> {
-  // Check admin access first
-  try {
-    await requireAdmin();
-  } catch (err) {
-    return error(
-      "Unauthorized - Admin access required",
-      ErrorCode.UNAUTHORIZED,
-    );
-  }
-
-  // ✅ NEU: createAction macht Validierung automatisch
-  const action = createAction<CreateOrganizationInput, string>(
-    createOrganizationSchema,
-    async (data) => {
-      // Check if slug already exists
-      const existing = await prisma.organization.findUnique({
-        where: { slug: data.slug },
-      });
-
-      if (existing) {
-        throw new Error("Slug is already in use");
-      }
-
-      // Create organization with default settings
-      const organization = await prisma.organization.create({
-        data: {
-          name: data.name,
-          slug: data.slug,
-          settings: {
-            create: {
-              siteTitle: data.name,
-              seoTitleTemplate: `%s | ${data.name}`,
-            },
-          },
-        },
-      });
-
-      // Revalidate paths
-      revalidatePath("/admin/organizations");
-      revalidatePath("/admin");
-
-      // Return organization ID for redirect
-      return organization.id;
-    },
-  );
-
-  return action(input);
-}
+import {
+  deleteOrganizationSchema,
+  updateOrganizationSchema,
+  addUserToOrganizationSchema,
+  deleteUserSchema,
+  toggleUserAdminSchema,
+  type UpdateOrganizationInput,
+  type DeleteOrganizationInput,
+  type AddUserToOrganizationInput,
+  type DeleteUserInput,
+  type ToggleUserAdminInput,
+} from "@/lib/schemas";
 
 // ============================================================================
 // UPDATE ORGANIZATION ACTION
@@ -183,12 +83,12 @@ export async function deleteOrganization(
     );
   }
 
-  const action = createAction<string, void>(
+  const action = createAction<DeleteOrganizationInput, void>(
     deleteOrganizationSchema,
-    async (organizationId) => {
+    async (data) => {
       // Cascade Delete wird automatisch durch Prisma Schema gehandhabt
       await prisma.organization.delete({
-        where: { id: organizationId },
+        where: { id: data.organizationId },
       });
 
       // Revalidate paths
@@ -217,8 +117,8 @@ export async function addUserToOrganization(
     );
   }
 
-  const action = createAction<AddUserInput, void>(
-    addUserSchema,
+  const action = createAction<AddUserToOrganizationInput, void>(
+    addUserToOrganizationSchema,
     async (data) => {
       // Check if email already exists
       const existingUser = await prisma.user.findUnique({
@@ -267,12 +167,12 @@ export async function deleteUser(input: unknown): Promise<ActionResult<void>> {
     );
   }
 
-  const action = createAction<string, void>(
+  const action = createAction<DeleteUserInput, void>(
     deleteUserSchema,
-    async (userId) => {
+    async (data) => {
       // Delete user (Cascade Delete für Posts/Sessions durch Schema)
       await prisma.user.delete({
-        where: { id: userId },
+        where: { id: data.userId },
       });
 
       // Revalidate paths

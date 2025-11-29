@@ -2,26 +2,10 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
 import { createAuthenticatedAction } from "@/lib/action-utils";
 import { ActionResult, error, ErrorCode } from "@/lib/errors";
 import { getAuthContext } from "@/lib/auth-utils";
-
-// ============================================================================
-// SETTINGS SCHEMA
-// ============================================================================
-
-const settingsSchema = z.object({
-  siteTitle: z.string().min(1, "Site title is required"),
-  faviconUrl: z.url("Invalid favicon URL").optional().or(z.literal("")),
-  logoUrl: z.url("Invalid logo URL").optional().or(z.literal("")),
-  seoTitleTemplate: z.string().min(1, "SEO title template is required"),
-  seoDefaultDescription: z.string().optional().or(z.literal("")),
-  ogImageUrl: z.url("Invalid OG image URL").optional().or(z.literal("")),
-  allowedOrigins: z.string().optional().or(z.literal("")),
-});
-
-type UpdateSettingsInput = z.infer<typeof settingsSchema>;
+import { updateSettingsSchema, type UpdateSettingsInput } from "@/lib/schemas";
 
 // ============================================================================
 // UPDATE SETTINGS ACTION
@@ -37,7 +21,7 @@ export async function updateSettings(
   }
 
   const action = createAuthenticatedAction<UpdateSettingsInput>(
-    settingsSchema,
+    updateSettingsSchema,
     async (data, auth) => {
       await prisma.siteSettings.upsert({
         where: { organizationId: auth.organizationId },

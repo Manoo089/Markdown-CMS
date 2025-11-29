@@ -5,10 +5,7 @@ import { revalidatePath } from "next/cache";
 import { getAuthContext } from "@/lib/auth-utils";
 import { createAuthenticatedAction } from "@/lib/action-utils";
 import { ActionResult, error, ErrorCode } from "@/lib/errors";
-import {
-  createPostSchema,
-  type CreatePostInput,
-} from "@/lib/schemas/post.schema";
+import { createPostSchema, type CreatePostInput } from "@/lib/schemas";
 
 // ============================================================================
 // CREATE POST ACTION
