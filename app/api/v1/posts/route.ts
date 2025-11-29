@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { validateApiKey } from "@/lib/api-auth";
 import { withCors, handleOptions } from "@/lib/api-cors";
+import { Prisma } from "@prisma/client";
 
 export async function OPTIONS(request: NextRequest) {
   // Für OPTIONS brauchen wir auch den API Key um die Settings zu bekommen
@@ -39,8 +40,7 @@ export async function GET(request: NextRequest) {
   const offset = parseInt(searchParams.get("offset") || "0");
 
   // Build where clause
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const where: any = {
+  const where: Prisma.PostWhereInput = {
     organizationId: organization.id,
   };
 
