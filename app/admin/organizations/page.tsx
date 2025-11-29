@@ -6,7 +6,7 @@ import Button from "@/ui/Button";
 import { UserMenu } from "@/components/UserMenu";
 import { ModeToggle } from "@/components/ModeToggle";
 import { DataTable } from "@/components/DataTable";
-import { organizationColumns } from "@/lib/constants/organization-table-columns";
+import { organizationColumns } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Organizations - Admin",

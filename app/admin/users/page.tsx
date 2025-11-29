@@ -6,7 +6,7 @@ import Button from "@/ui/Button";
 import { UserMenu } from "@/components/UserMenu";
 import { ModeToggle } from "@/components/ModeToggle";
 import { DataTable } from "@/components/DataTable";
-import { userColumns } from "@/lib/constants/user-table-columns";
+import { userColumns } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "All Users - Admin",

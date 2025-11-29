@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 
-import { POSTS_PER_PAGE } from "@/lib/constants/posts-per-page";
+import { POSTS_PER_PAGE } from "@/lib/constants";
 
 import Button from "@/ui/Button";
 import PostCard from "@/components/PostCard";

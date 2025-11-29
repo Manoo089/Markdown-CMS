@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createPost } from "./actions";
 import { generateSlug } from "@/lib/slug-utils";
-import { contentTypeOptions } from "@/lib/constants/content-type-options";
+import { contentTypeOptions } from "@/lib/constants";
 import { useMessage } from "@/hooks/useActionState";
 import { MarkdownPreview } from "@/components/MarkdownPreview";
 import { MessageAlert } from "@/components/MessageAlert";

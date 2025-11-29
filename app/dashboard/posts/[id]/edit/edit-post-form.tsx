@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { generateSlug } from "@/lib/slug-utils";
-import { contentTypeOptions } from "@/lib/constants/content-type-options";
+import { contentTypeOptions } from "@/lib/constants";
 import { updatePost } from "./actions";
 import { MarkdownPreview } from "@/components/MarkdownPreview";
 import Button from "@/ui/Button";

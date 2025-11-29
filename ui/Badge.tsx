@@ -9,7 +9,7 @@ import {
   type PostType,
   type PostStatus,
   type BadgeConfig,
-} from "@/lib/constants/post-type-badges";
+} from "@/lib/constants";
 
 type BadgeVariant = "type" | "status" | "role" | "generic";
 
