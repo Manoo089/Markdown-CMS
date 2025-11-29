@@ -26,10 +26,12 @@ export async function validateApiKey(request: NextRequest) {
   }
 
   // Update lastUsedAt
-  await prisma.apiKey.update({
-    where: { id: apiKey.id },
-    data: { lastUsedAt: new Date() },
-  });
+  prisma.apiKey
+    .update({
+      where: { id: apiKey.id },
+      data: { lastUsedAt: new Date() },
+    })
+    .catch(() => {});
 
   return {
     organization: apiKey.organization,
