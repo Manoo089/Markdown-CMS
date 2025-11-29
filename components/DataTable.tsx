@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { DataTableProps } from "@/types/column-alignment";
-import { getAlignmentClass } from "@/helper/getAlignmentClass";
+import { getAlignmentClass } from "@/lib/utils/alignment";
 
 export function DataTable<T>({
   columns,
