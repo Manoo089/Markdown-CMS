@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createPost } from "./actions";
 import { generateSlug } from "@/lib/slug-utils";
-import { contentTypeOptions } from "@/lib/constants";
+import { contentTypeOptions } from "@/lib/constants/content-type-options";
 import { useMessage } from "@/hooks/useActionState";
 import { MarkdownPreview } from "@/components/MarkdownPreview";
 import { MessageAlert } from "@/components/MessageAlert";
@@ -13,6 +13,7 @@ import InputField from "@/ui/InputField";
 import TextareaField from "@/ui/TextareaField";
 import CheckboxField from "@/ui/CheckboxField";
 import SelectField from "@/ui/SelectField";
+import { isSuccess, isError, getErrorMessage } from "@/lib/errors";
 
 interface Props {
   userId: string;
@@ -49,14 +50,19 @@ export function PostForm({ userId, organizationId }: Props) {
       organizationId,
     });
 
-    if (result.error) {
-      showError(result.error);
+    if (isError(result)) {
+      const errorMessage = getErrorMessage(result);
+      if (errorMessage) {
+        showError(errorMessage);
+      }
       setIsSubmitting(false);
       return;
     }
 
-    router.push("/dashboard");
-    router.refresh();
+    if (isSuccess(result)) {
+      router.push("/dashboard");
+      router.refresh();
+    }
   };
 
   return (

@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { generateSlug } from "@/lib/slug-utils";
-import { contentTypeOptions } from "@/lib/constants";
+import { contentTypeOptions } from "@/lib/constants/content-type-options";
 import { updatePost } from "./actions";
 import { MarkdownPreview } from "@/components/MarkdownPreview";
 import Button from "@/ui/Button";
@@ -13,6 +13,7 @@ import SelectField from "@/ui/SelectField";
 import CheckboxField from "@/ui/CheckboxField";
 import { useMessage } from "@/hooks/useActionState";
 import { MessageAlert } from "@/components/MessageAlert";
+import { isSuccess, isError, getErrorMessage } from "@/lib/errors";
 
 interface Props {
   post: {
@@ -58,14 +59,19 @@ export function EditPostForm({ post, organizationId }: Props) {
       organizationId,
     });
 
-    if (result.error) {
-      showError(result.error);
+    if (isError(result)) {
+      const errorMessage = getErrorMessage(result);
+      if (errorMessage) {
+        showError(errorMessage);
+      }
       setIsSubmitting(false);
       return;
     }
 
-    router.push("/dashboard");
-    router.refresh();
+    if (isSuccess(result)) {
+      router.push("/dashboard");
+      router.refresh();
+    }
   };
 
   return (

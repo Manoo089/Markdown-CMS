@@ -136,6 +136,34 @@ export function hasFieldErrors<T>(
   );
 }
 
+/**
+ * Get error message from any error result type
+ * Converts all error types to a user-friendly string message
+ */
+export function getErrorMessage<T>(result: ActionResult<T>): string | null {
+  if (!isError(result)) {
+    return null;
+  }
+
+  // Single error message
+  if ("error" in result) {
+    return result.error;
+  }
+
+  // Multiple validation errors
+  if ("errors" in result && Array.isArray(result.errors)) {
+    return result.errors.join(", ");
+  }
+
+  // Field-specific errors
+  if ("fieldErrors" in result) {
+    const messages = Object.values(result.fieldErrors);
+    return messages.join(", ");
+  }
+
+  return "An unknown error occurred";
+}
+
 // ============================================================================
 // ERROR CREATORS
 // ============================================================================

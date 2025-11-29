@@ -2,34 +2,14 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { auth } from "@/lib/auth";
 import bcrypt from "bcryptjs";
 import {
   updatePasswordSchema,
   updateProfileSchema,
 } from "@/lib/schemas/user.schema";
-// ✅ NEU: Error-Handling System
-import { createAuthenticatedAction, AuthContext } from "@/lib/action-utils";
+import { createAuthenticatedAction } from "@/lib/action-utils";
 import { ActionResult, error, ErrorCode } from "@/lib/errors";
-
-// ============================================================================
-// HELPER: GET AUTH CONTEXT
-// ============================================================================
-
-async function getAuthContext(): Promise<AuthContext | null> {
-  const session = await auth();
-
-  if (!session?.user?.id) {
-    return null;
-  }
-
-  return {
-    userId: session.user.id,
-    userEmail: session.user.email,
-    organizationId: session.user.organizationId || "",
-    isAdmin: session.user.isAdmin || false,
-  };
-}
+import { getAuthContext } from "@/lib/auth-utils";
 
 // ============================================================================
 // UPDATE PROFILE ACTION
@@ -101,7 +81,7 @@ export async function updatePassword(
     return error("Unauthorized", ErrorCode.UNAUTHORIZED);
   }
 
-  // ✅ NEU: createAuthenticatedAction macht Validierung automatisch
+  // createAuthenticatedAction macht Validierung automatisch
   const action = createAuthenticatedAction<UpdatePasswordInput>(
     updatePasswordSchema,
     async (data, auth) => {

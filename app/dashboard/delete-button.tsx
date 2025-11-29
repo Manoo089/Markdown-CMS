@@ -1,9 +1,10 @@
 "use client";
 
-import Button from "@/ui/Button";
+import { useState } from "react";
 import { deletePost } from "./actions";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { isError, getErrorMessage } from "@/lib/errors";
+import Button from "@/ui/Button";
 
 interface Props {
   postId: string;
@@ -26,8 +27,11 @@ export function DeleteButton({ postId, postTitle }: Props) {
 
     const result = await deletePost(postId);
 
-    if (result.error) {
-      alert(result.error);
+    if (isError(result)) {
+      const errorMessage = getErrorMessage(result);
+      if (errorMessage) {
+        alert(errorMessage);
+      }
       setIsDeleting(false);
       return;
     }

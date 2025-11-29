@@ -12,6 +12,7 @@ import {
   isSuccess,
   hasValidationErrors,
   hasFieldErrors,
+  getErrorMessage,
 } from "@/lib/errors";
 
 // ============================================================================
@@ -95,12 +96,10 @@ export function useActionState<TInput, TOutput = void>() {
         } else if (hasValidationErrors(result)) {
           setErrors(result.errors);
           setMessage({ type: "error", text: result.errors[0] });
-        } else if ("error" in result) {
-          // ErrorResult - has single error message
-          setMessage({ type: "error", text: result.error });
         } else {
-          // Fallback for unexpected error format
-          setMessage({ type: "error", text: "An error occurred" });
+          // Use getErrorMessage for consistent error handling
+          const errorText = getErrorMessage(result) || "An error occurred";
+          setMessage({ type: "error", text: errorText });
         }
 
         if (options?.onError) {

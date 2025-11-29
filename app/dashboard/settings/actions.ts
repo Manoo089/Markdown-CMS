@@ -2,29 +2,10 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { auth } from "@/lib/auth";
 import { z } from "zod";
-import { createAuthenticatedAction, AuthContext } from "@/lib/action-utils";
+import { createAuthenticatedAction } from "@/lib/action-utils";
 import { ActionResult, error, ErrorCode } from "@/lib/errors";
-
-// ============================================================================
-// HELPER: GET AUTH CONTEXT
-// ============================================================================
-
-async function getAuthContext(): Promise<AuthContext | null> {
-  const session = await auth();
-
-  if (!session?.user?.id || !session?.user?.organizationId) {
-    return null;
-  }
-
-  return {
-    userId: session.user.id,
-    userEmail: session.user.email || "",
-    organizationId: session.user.organizationId,
-    isAdmin: session.user.isAdmin || false,
-  };
-}
+import { getAuthContext } from "@/lib/auth-utils";
 
 // ============================================================================
 // SETTINGS SCHEMA
