@@ -10,3 +10,4 @@
  */
 
 export * from "./alignment";
+export * from "./content-types";

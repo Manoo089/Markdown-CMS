@@ -1,6 +1,8 @@
 import { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
 import { PostForm } from "./post-form";
+import { prisma } from "@/lib/prisma";
+import { parseContentTypeConfig } from "@/lib/utils";
 import Button from "@/ui/Button";
 import Navigation from "@/components/Navigation";
 
@@ -10,6 +12,14 @@ export const metadata: Metadata = {
 
 export default async function NewPostPage() {
   const session = await requireAuth();
+
+  // Get organization's content type configuration
+  const org = await prisma.organization.findUnique({
+    where: { id: session.user.organizationId },
+    select: { contentTypeConfig: true },
+  });
+
+  const config = parseContentTypeConfig(org?.contentTypeConfig);
 
   return (
     <div className="min-h-screen bg-background">
@@ -34,6 +44,7 @@ export default async function NewPostPage() {
         <PostForm
           userId={session?.user?.id}
           organizationId={session.user.organizationId}
+          contentTypeOptions={config.types}
         />
       </div>
     </div>

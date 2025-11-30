@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@/lib/prisma";
+import { parseContentTypeConfig } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import { EditPostForm } from "./edit-post-form";
 import Navigation from "@/components/Navigation";
@@ -33,6 +34,14 @@ export default async function EditPostPage({ params }: Props) {
     notFound();
   }
 
+  // Get organization's content type configuration
+  const org = await prisma.organization.findUnique({
+    where: { id: session.user.organizationId },
+    select: { contentTypeConfig: true },
+  });
+
+  const config = parseContentTypeConfig(org?.contentTypeConfig);
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation>
@@ -54,6 +63,7 @@ export default async function EditPostPage({ params }: Props) {
         <EditPostForm
           post={post}
           organizationId={session.user.organizationId}
+          contentTypeOptions={config.types}
         />
       </div>
     </div>

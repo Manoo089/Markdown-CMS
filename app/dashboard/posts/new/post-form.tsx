@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createPost } from "./actions";
 import { generateSlug } from "@/lib/slug-utils";
-import { contentTypeOptions } from "@/lib/constants";
 import { useMessage } from "@/hooks/useActionState";
 import { MarkdownPreview } from "@/components/MarkdownPreview";
 import { MessageAlert } from "@/components/MessageAlert";
@@ -14,13 +13,19 @@ import TextareaField from "@/ui/TextareaField";
 import CheckboxField from "@/ui/CheckboxField";
 import SelectField from "@/ui/SelectField";
 import { isSuccess, isError, getErrorMessage } from "@/lib/errors";
+import { ContentTypeDefinition } from "@/types/content-type";
 
 interface Props {
   userId: string;
   organizationId: string;
+  contentTypeOptions: ContentTypeDefinition[];
 }
 
-export function PostForm({ userId, organizationId }: Props) {
+export function PostForm({
+  userId,
+  contentTypeOptions,
+  organizationId,
+}: Props) {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [manualSlug, setManualSlug] = useState("");

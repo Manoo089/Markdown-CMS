@@ -25,6 +25,7 @@ export {
 // Post Schemas
 export {
   createPostSchema,
+  createPostSchemaForOrg,
   updatePostSchema,
   deletePostSchema,
   postTypeEnum,

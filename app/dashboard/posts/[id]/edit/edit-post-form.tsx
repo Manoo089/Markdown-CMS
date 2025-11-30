@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { generateSlug } from "@/lib/slug-utils";
-import { contentTypeOptions } from "@/lib/constants";
 import { updatePost } from "./actions";
 import { MarkdownPreview } from "@/components/MarkdownPreview";
 import Button from "@/ui/Button";
@@ -14,6 +13,7 @@ import CheckboxField from "@/ui/CheckboxField";
 import { useMessage } from "@/hooks/useActionState";
 import { MessageAlert } from "@/components/MessageAlert";
 import { isSuccess, isError, getErrorMessage } from "@/lib/errors";
+import { ContentTypeDefinition } from "@/types/content-type";
 
 interface Props {
   post: {
@@ -26,9 +26,14 @@ interface Props {
     published: boolean;
   };
   organizationId: string;
+  contentTypeOptions: ContentTypeDefinition[];
 }
 
-export function EditPostForm({ post, organizationId }: Props) {
+export function EditPostForm({
+  post,
+  organizationId,
+  contentTypeOptions,
+}: Props) {
   const router = useRouter();
 
   const [title, setTitle] = useState(post.title);
