@@ -203,6 +203,10 @@ export function validationErrors(errors: string[]): ValidationErrorResult {
   };
 }
 
+export function validationError(err: ZodError): FieldErrorResult {
+  return handleZodError(err);
+}
+
 /**
  * Create a field error result with field-specific errors
  */

@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { getAuthContext } from "@/lib/auth-utils";
-import { ActionResult, error, ErrorCode, validationErrors } from "@/lib/errors";
+import { ActionResult, error, ErrorCode, validationError } from "@/lib/errors";
 import { createPostSchemaForOrg } from "@/lib/schemas";
 import { parseContentTypeConfig, getAllowedTypeValues } from "@/lib/utils";
 
@@ -41,7 +41,7 @@ export async function createPost(
     // Validate input with organization-specific schema
     const parsed = schema.safeParse(input);
     if (!parsed.success) {
-      return validationErrors(parsed.error);
+      return validationError(parsed.error);
     }
 
     const data = parsed.data;
