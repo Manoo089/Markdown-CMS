@@ -4,8 +4,9 @@ import { useTheme } from "next-themes";
 import Moon from "@/public/moon.svg";
 import Sun from "@/public/sun.svg";
 import System from "@/public/system.svg";
+import dynamic from "next/dynamic";
 
-export function ModeToggle() {
+function ModeToggleInner() {
   const { theme, setTheme } = useTheme();
 
   const handleClick = () => {
@@ -28,3 +29,8 @@ export function ModeToggle() {
     </button>
   );
 }
+
+export const ModeToggle = dynamic(() => Promise.resolve(ModeToggleInner), {
+  ssr: false,
+  loading: () => <div className="p-2 w-10 h-10" aria-hidden="true" />,
+});
