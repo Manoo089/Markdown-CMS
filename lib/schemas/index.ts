@@ -27,6 +27,7 @@ export {
   createPostSchema,
   createPostSchemaForOrg,
   updatePostSchema,
+  createUpdatePostSchemaForOrg,
   deletePostSchema,
   postTypeEnum,
   type CreatePostInput,
@@ -53,3 +54,15 @@ export {
   type UpdatePasswordInput,
   type UpdateProfileInput,
 } from "./user.schema";
+
+// Content Type Schemas
+export {
+  contentTypeDefinitionSchema,
+  addContentTypeSchema,
+  updateContentTypeSchema,
+  deleteContentTypeSchema,
+  type ContentTypeDefinitionInput,
+  type AddContentTypeInput,
+  type UpdateContentTypeInput,
+  type DeleteContentTypeInput,
+} from "./content-type.schema";

@@ -3,9 +3,9 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { getAuthContext } from "@/lib/auth-utils";
-import { createAuthenticatedAction } from "@/lib/action-utils";
-import { ActionResult, error, ErrorCode } from "@/lib/errors";
-import { updatePostSchema, type UpdatePostInput } from "@/lib/schemas";
+import { ActionResult, error, ErrorCode, validationError } from "@/lib/errors";
+import { createUpdatePostSchemaForOrg } from "@/lib/schemas";
+import { parseContentTypeConfig, getAllowedTypeValues } from "@/lib/utils";
 
 // ============================================================================
 // UPDATE POST ACTION
@@ -20,61 +20,93 @@ export async function updatePost(
     return error("Unauthorized", ErrorCode.UNAUTHORIZED);
   }
 
-  const action = createAuthenticatedAction<UpdatePostInput, { postId: string }>(
-    updatePostSchema,
-    async (data, auth) => {
-      // Prüfe ob der Post zur Organization gehört
-      const currentPost = await prisma.post.findUnique({
-        where: { id: data.postId },
-      });
+  if (!authContext) {
+    return error("Unauthorized", ErrorCode.UNAUTHORIZED);
+  }
 
-      if (!currentPost) {
-        throw new Error("Post not found");
-      }
+  try {
+    // Get organization with content type config
+    const org = await prisma.organization.findUnique({
+      where: { id: authContext.organizationId },
+      select: { contentTypeConfig: true },
+    });
 
-      if (currentPost.organizationId !== auth.organizationId) {
-        throw new Error("You don't have permission to edit this post");
-      }
+    if (!org) {
+      return error("Organization not found", ErrorCode.NOT_FOUND);
+    }
 
-      // Prüfe ob Slug bereits von ANDEREM Post genutzt wird
-      const existingPost = await prisma.post.findUnique({
-        where: {
-          organizationId_slug: {
-            organizationId: auth.organizationId,
-            slug: data.slug,
-          },
-        },
-      });
+    // Parse content type config and get allowed types
+    const config = parseContentTypeConfig(org.contentTypeConfig);
+    const allowedTypes = getAllowedTypeValues(config);
 
-      if (existingPost && existingPost.id !== data.postId) {
-        throw new Error("A post with this slug already exists");
-      }
+    // Create organization-specific schema
+    const schema = createUpdatePostSchemaForOrg(allowedTypes);
 
-      // Post updaten
-      const post = await prisma.post.update({
-        where: { id: data.postId },
-        data: {
-          title: data.title,
+    // Validate input with organization-specific schema
+    const parsed = schema.safeParse(input);
+    if (!parsed.success) {
+      return validationError(parsed.error);
+    }
+
+    const data = parsed.data;
+
+    // Check if post exists and belongs to organization
+    const currentPost = await prisma.post.findUnique({
+      where: { id: data.postId },
+    });
+
+    if (!currentPost) {
+      return error("Post not found", ErrorCode.NOT_FOUND);
+    }
+
+    if (currentPost.organizationId !== authContext.organizationId) {
+      return error(
+        "You don't have permission to edit this post",
+        ErrorCode.UNAUTHORIZED,
+      );
+    }
+
+    // Prüfe ob Slug bereits von ANDEREM Post genutzt wird
+    const existingPost = await prisma.post.findUnique({
+      where: {
+        organizationId_slug: {
+          organizationId: authContext.organizationId,
           slug: data.slug,
-          content: data.content,
-          excerpt: data.excerpt || null,
-          type: data.type,
-          published: data.published,
-          publishedAt:
-            data.published && !currentPost.published
-              ? new Date() // Setze publishedAt nur beim ersten Publish
-              : currentPost.publishedAt,
         },
-      });
+      },
+    });
 
-      // 4. Cache invalidieren
-      revalidatePath("/dashboard");
-      revalidatePath("/");
+    if (existingPost && existingPost.id !== data.postId) {
+      throw new Error("A post with this slug already exists");
+    }
 
-      // Return post ID
-      return { postId: post.id };
-    },
-  );
+    // Post updaten
+    const post = await prisma.post.update({
+      where: { id: data.postId },
+      data: {
+        title: data.title,
+        slug: data.slug,
+        content: data.content,
+        excerpt: data.excerpt || null,
+        type: data.type,
+        published: data.published,
+        publishedAt:
+          data.published && !currentPost.published
+            ? new Date() // Setze publishedAt nur beim ersten Publish
+            : currentPost.publishedAt,
+      },
+    });
 
-  return action(input, authContext);
+    // 4. Cache invalidieren
+    revalidatePath("/dashboard");
+    revalidatePath("/");
+
+    return { success: true, data: { postId: post.id } };
+  } catch (err) {
+    console.error("Update post error:", err);
+    return error(
+      err instanceof Error ? err.message : "Failed to update post",
+      ErrorCode.INTERNAL_ERROR,
+    );
+  }
 }

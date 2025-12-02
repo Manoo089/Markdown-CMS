@@ -25,7 +25,7 @@ export function DeleteButton({ postId, postTitle }: Props) {
 
     setIsDeleting(true);
 
-    const result = await deletePost(postId);
+    const result = await deletePost({ postId });
 
     if (isError(result)) {
       const errorMessage = getErrorMessage(result);

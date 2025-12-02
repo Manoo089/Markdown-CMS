@@ -29,11 +29,7 @@ interface Props {
   contentTypeOptions: ContentTypeDefinition[];
 }
 
-export function EditPostForm({
-  post,
-  organizationId,
-  contentTypeOptions,
-}: Props) {
+export function EditPostForm({ post, contentTypeOptions }: Props) {
   const router = useRouter();
 
   const [title, setTitle] = useState(post.title);
@@ -61,7 +57,6 @@ export function EditPostForm({
       excerpt: excerpt || undefined,
       type,
       published,
-      organizationId,
     });
 
     if (isError(result)) {

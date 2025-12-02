@@ -10,6 +10,7 @@ import { EditOrganizationForm } from "./edit-organization-form";
 import { DeleteOrganizationButton } from "./delete-organization-button";
 import { AddUserForm } from "./add-user-form";
 import { UserActionsMenu } from "./user-actions-menu";
+import { ContentTypesSettings } from "./content-types-settings";
 
 export const metadata: Metadata = {
   title: "Organization Details - Admin",
@@ -131,6 +132,12 @@ export default async function OrganizationDetailPage({ params }: Props) {
           <h3 className="text-xl font-bold mb-4">Organization Settings</h3>
           <EditOrganizationForm organization={organization} />
         </div>
+
+        {/* Content Types Settings */}
+        <ContentTypesSettings
+          organizationId={organization.id}
+          contentTypeConfig={organization.contentTypeConfig}
+        />
 
         {/* Users List */}
         <div className="bg-surface rounded-lg p-6 shadow border border-border">

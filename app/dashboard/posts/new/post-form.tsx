@@ -21,11 +21,7 @@ interface Props {
   contentTypeOptions: ContentTypeDefinition[];
 }
 
-export function PostForm({
-  userId,
-  contentTypeOptions,
-  organizationId,
-}: Props) {
+export function PostForm({ contentTypeOptions }: Props) {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [manualSlug, setManualSlug] = useState("");
@@ -51,8 +47,6 @@ export function PostForm({
       excerpt: excerpt || undefined,
       type,
       published,
-      authorId: userId,
-      organizationId,
     });
 
     if (isError(result)) {

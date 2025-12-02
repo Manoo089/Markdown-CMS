@@ -39,7 +39,7 @@ export async function deletePost(input: unknown): Promise<ActionResult<void>> {
         where: { id: data.postId },
       });
 
-      revalidatePath("/dashbaord");
+      revalidatePath("/dashboard");
     },
   );
 
