@@ -31,7 +31,7 @@ export async function validateApiKey(request: NextRequest) {
       where: { id: apiKey.id },
       data: { lastUsedAt: new Date() },
     })
-    .catch(() => {});
+    .catch(console.error);
 
   return {
     organization: apiKey.organization,
