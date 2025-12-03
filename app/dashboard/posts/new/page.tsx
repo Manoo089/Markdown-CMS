@@ -1,10 +1,11 @@
 import { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
-import { PostForm } from "./post-form";
 import { prisma } from "@/lib/prisma";
+import { createPost } from "./actions";
 import { parseContentTypeConfig } from "@/lib/utils";
 import Button from "@/ui/Button";
 import Navigation from "@/components/Navigation";
+import { PostEditor } from "@/components/PostEditor";
 
 export const metadata: Metadata = {
   title: "Create new post",
@@ -41,10 +42,10 @@ export default async function NewPostPage() {
             Write your content in Markdown
           </p>
         </div>
-        <PostForm
-          userId={session?.user?.id}
-          organizationId={session.user.organizationId}
+        <PostEditor
+          mode="create"
           contentTypeOptions={config.types}
+          onSubmit={createPost}
         />
       </div>
     </div>

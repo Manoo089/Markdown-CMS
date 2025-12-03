@@ -3,9 +3,10 @@ import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@/lib/prisma";
 import { parseContentTypeConfig } from "@/lib/utils";
 import { notFound } from "next/navigation";
-import { EditPostForm } from "./edit-post-form";
 import Navigation from "@/components/Navigation";
 import Button from "@/ui/Button";
+import { PostEditor } from "@/components/PostEditor";
+import { updatePost } from "./actions";
 
 export const metadata: Metadata = {
   title: "Edit post",
@@ -60,10 +61,11 @@ export default async function EditPostPage({ params }: Props) {
           <h1 className="text-3xl font-bold">Edit Post</h1>
           <p className="text-text-subtle mt-2">Update your content</p>
         </div>
-        <EditPostForm
-          post={post}
-          organizationId={session.user.organizationId}
+        <PostEditor
+          mode="edit"
+          initialData={post}
           contentTypeOptions={config.types}
+          onSubmit={updatePost}
         />
       </div>
     </div>

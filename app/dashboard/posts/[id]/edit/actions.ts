@@ -20,10 +20,6 @@ export async function updatePost(
     return error("Unauthorized", ErrorCode.UNAUTHORIZED);
   }
 
-  if (!authContext) {
-    return error("Unauthorized", ErrorCode.UNAUTHORIZED);
-  }
-
   try {
     // Get organization with content type config
     const org = await prisma.organization.findUnique({
