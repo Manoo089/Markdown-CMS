@@ -1,37 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { validateApiKey } from "@/lib/api-auth";
-import { withCors, handleOptions } from "@/lib/api-cors";
 import { Prisma } from "@prisma/client";
+import { apiRoute, apiOptions, apiSuccessWithMeta } from "@/lib/api-utils";
 
-export async function OPTIONS(request: NextRequest) {
-  // Für OPTIONS brauchen wir auch den API Key um die Settings zu bekommen
-  const auth = await validateApiKey(request);
-  const origin = request.headers.get("origin") || undefined;
+export const OPTIONS = apiOptions();
 
-  if ("error" in auth) {
-    return handleOptions(origin, "*"); // Fallback
-  }
-
-  return handleOptions(origin, auth.settings?.allowedOrigins);
-}
-
-export async function GET(request: NextRequest) {
-  const origin = request.headers.get("origin") || undefined;
-
-  // Auth
-  const auth = await validateApiKey(request);
-
-  if ("error" in auth) {
-    return withCors(
-      NextResponse.json({ error: auth.error }, { status: auth.status }),
-      origin,
-      "*", // Bei Auth-Fehler Wildcard
-    );
-  }
-
-  const { organization, settings } = auth;
-
+export const GET = apiRoute(async (request: NextRequest, { organization }) => {
   // Query Parameters
   const { searchParams } = new URL(request.url);
   const type = searchParams.get("type");
@@ -81,16 +55,5 @@ export async function GET(request: NextRequest) {
     prisma.post.count({ where }),
   ]);
 
-  return withCors(
-    NextResponse.json({
-      data: posts,
-      meta: {
-        total,
-        limit,
-        offset,
-      },
-    }),
-    origin,
-    settings?.allowedOrigins,
-  );
-}
+  return apiSuccessWithMeta(posts, { total, limit, offset });
+});
