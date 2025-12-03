@@ -2,8 +2,24 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 /**
- * Prüft ob der aktuelle User Admin ist
- * Wirft Redirect wenn nicht authenticated oder kein Admin
+ * Admin Authentication Utilities
+ *
+ * For Server Components (Pages): Use requireAdmin() - it redirects unauthorized users
+ * For Server Actions: Use adminAction() from lib/action-utils.ts - it returns ActionResult
+ */
+
+/**
+ * Require admin access for a page (Server Component)
+ * Redirects to /login if not authenticated, or /dashboard if not admin
+ *
+ * @example
+ * ```typescript
+ * // In a Server Component (page.tsx)
+ * export default async function AdminPage() {
+ *   const session = await requireAdmin();
+ *   // ... rest of page
+ * }
+ * ```
  */
 export async function requireAdmin() {
   const session = await auth();
@@ -29,8 +45,13 @@ export async function requireAdmin() {
 }
 
 /**
- * Prüft ob User Admin ist ohne Redirect
- * Nützlich für Conditional Rendering
+ * Check if current user is admin without redirect
+ * Useful for conditional rendering in components
+ *
+ * @example
+ * ```typescript
+ * const showAdminLink = await isAdmin();
+ * ```
  */
 export async function isAdmin(): Promise<boolean> {
   const session = await auth();

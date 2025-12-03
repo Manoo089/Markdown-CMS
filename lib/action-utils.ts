@@ -212,6 +212,79 @@ export function createAdminAction<TInput, TOutput = void>(
 }
 
 // ============================================================================
+// SELF-AUTHENTICATING ADMIN ACTION WRAPPER
+// ============================================================================
+
+/**
+ * Create a server action that automatically verifies admin privileges
+ * No need to manually call requireAdmin() - it's handled internally
+ *
+ * @example
+ * ```typescript
+ * export const deleteOrganization = adminAction(
+ *   deleteOrgSchema,
+ *   async (data) => {
+ *     await prisma.organization.delete({ where: { id: data.orgId } });
+ *   }
+ * );
+ * ```
+ */
+export function adminAction<TInput, TOutput = void>(
+  schema: ZodType<TInput>,
+  handler: (validatedInput: TInput) => Promise<TOutput> | TOutput,
+) {
+  return async (input: unknown): Promise<ActionResult<TOutput>> => {
+    try {
+      // Dynamic import to avoid circular dependencies
+      const { auth } = await import("@/lib/auth");
+      const { prisma } = await import("@/lib/prisma");
+
+      // Get session
+      const session = await auth();
+
+      if (!session?.user?.id) {
+        return error(
+          "You must be logged in to perform this action",
+          ErrorCode.UNAUTHORIZED,
+        ) as ActionResult<TOutput>;
+      }
+
+      // Check admin status from database
+      const user = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { isAdmin: true },
+      });
+
+      if (!user?.isAdmin) {
+        return error(
+          "Admin access required",
+          ErrorCode.FORBIDDEN,
+        ) as ActionResult<TOutput>;
+      }
+
+      // Validate input
+      const validation = schema.safeParse(input);
+
+      if (!validation.success) {
+        return handleZodError(validation.error) as ActionResult<TOutput>;
+      }
+
+      // Execute handler
+      const result = await handler(validation.data);
+
+      // Return success result
+      if (result === undefined) {
+        return successVoid() as ActionResult<TOutput>;
+      }
+
+      return success(result) as ActionResult<TOutput>;
+    } catch (err) {
+      return handleError(err, "Admin Action") as ActionResult<TOutput>;
+    }
+  };
+}
+
+// ============================================================================
 // SIMPLE ACTION WRAPPER (No validation)
 // ============================================================================
 
