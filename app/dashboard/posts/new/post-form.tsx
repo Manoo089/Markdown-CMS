@@ -148,7 +148,7 @@ export function PostForm({ contentTypeOptions }: Props) {
       </div>
 
       <CheckboxField
-        id="pusblished"
+        id="published"
         checked={published}
         label="Publish immediately"
         onChange={(e) => setPublished(e.target.checked)}

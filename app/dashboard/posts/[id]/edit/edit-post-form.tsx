@@ -159,7 +159,7 @@ export function EditPostForm({ post, contentTypeOptions }: Props) {
 
       <div className="flex items-center">
         <CheckboxField
-          id="pusblished"
+          id="published"
           checked={published}
           label="Publish immediately"
           onChange={(e) => setPublished(e.target.checked)}
