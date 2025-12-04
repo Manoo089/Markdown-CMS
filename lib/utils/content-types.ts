@@ -4,11 +4,84 @@
  * Helper functions for working with organization-specific content types
  */
 
+import { unstable_cache } from "next/cache";
 import {
   ContentTypeConfig,
   ContentTypeDefinition,
   DEFAULT_CONTENT_TYPES,
 } from "@/types/content-type";
+
+// ============================================================================
+// CACHED CONTENT TYPE CONFIG
+// ============================================================================
+
+/**
+ * Get content type config for an organization with caching
+ *
+ * Uses Next.js unstable_cache for automatic caching and revalidation.
+ * Cache expires after 60 seconds or when paths are revalidated.
+ *
+ * @param organizationId - Organization ID to get config for
+ * @returns Parsed content type config
+ *
+ * @example
+ * ```typescript
+ * // In a Server Component or Action
+ * const config = await getContentTypeConfig(organizationId);
+ * ```
+ */
+export async function getContentTypeConfig(
+  organizationId: string,
+): Promise<ContentTypeConfig> {
+  const getCachedConfig = unstable_cache(
+    async (orgId: string) => {
+      const { prisma } = await import("@/lib/prisma");
+
+      const org = await prisma.organization.findUnique({
+        where: { id: orgId },
+        select: { contentTypeConfig: true },
+      });
+
+      if (!org) {
+        console.warn(`Organization ${orgId} not found, using default config`);
+        return DEFAULT_CONTENT_TYPES;
+      }
+
+      return parseContentTypeConfig(org.contentTypeConfig);
+    },
+    [`content-type-config-${organizationId}`],
+    {
+      revalidate: 60, // Cache for 60 seconds
+    },
+  );
+
+  return getCachedConfig(organizationId);
+}
+
+/**
+ * Invalidate content type config cache for an organization
+ *
+ * Call this after updating content types to ensure fresh data.
+ * Uses revalidatePath to invalidate all pages using the config.
+ *
+ * @param organizationId - Organization ID to invalidate cache for
+ *
+ * @example
+ * ```typescript
+ * await updateContentType(data);
+ * await invalidateContentTypeCache(organizationId);
+ * ```
+ */
+export async function invalidateContentTypeCache(): Promise<void> {
+  const { revalidatePath } = await import("next/cache");
+  // Revalidate dashboard paths that use content type config
+  revalidatePath("/dashboard/posts/new");
+  revalidatePath("/dashboard/posts", "layout");
+}
+
+// ============================================================================
+// PARSING UTILITIES
+// ============================================================================
 
 /**
  * Parse content type config from JSON string

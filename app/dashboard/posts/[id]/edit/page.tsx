@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
 import { prisma } from "@/lib/prisma";
-import { parseContentTypeConfig } from "@/lib/utils";
+import { getContentTypeConfig } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import Navigation from "@/components/Navigation";
 import Button from "@/ui/Button";
@@ -35,13 +35,8 @@ export default async function EditPostPage({ params }: Props) {
     notFound();
   }
 
-  // Get organization's content type configuration
-  const org = await prisma.organization.findUnique({
-    where: { id: session.user.organizationId },
-    select: { contentTypeConfig: true },
-  });
-
-  const config = parseContentTypeConfig(org?.contentTypeConfig);
+  // Get organization's content type configuration (cached)
+  const config = await getContentTypeConfig(session.user.organizationId);
 
   return (
     <div className="min-h-screen bg-background">

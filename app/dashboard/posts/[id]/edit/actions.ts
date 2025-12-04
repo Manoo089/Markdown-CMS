@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { getAuthContext } from "@/lib/auth-utils";
 import { ActionResult, error, ErrorCode, validationError } from "@/lib/errors";
 import { createUpdatePostSchemaForOrg } from "@/lib/schemas";
-import { parseContentTypeConfig, getAllowedTypeValues } from "@/lib/utils";
+import { getContentTypeConfig, getAllowedTypeValues } from "@/lib/utils";
 
 // ============================================================================
 // UPDATE POST ACTION
@@ -21,18 +21,8 @@ export async function updatePost(
   }
 
   try {
-    // Get organization with content type config
-    const org = await prisma.organization.findUnique({
-      where: { id: authContext.organizationId },
-      select: { contentTypeConfig: true },
-    });
-
-    if (!org) {
-      return error("Organization not found", ErrorCode.NOT_FOUND);
-    }
-
-    // Parse content type config and get allowed types
-    const config = parseContentTypeConfig(org.contentTypeConfig);
+    // Get content type config (cached)
+    const config = await getContentTypeConfig(authContext.organizationId);
     const allowedTypes = getAllowedTypeValues(config);
 
     // Create organization-specific schema
@@ -93,7 +83,7 @@ export async function updatePost(
       },
     });
 
-    // 4. Cache invalidieren
+    // Cache invalidieren
     revalidatePath("/dashboard");
     revalidatePath("/");
 

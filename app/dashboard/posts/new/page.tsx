@@ -1,8 +1,7 @@
 import { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
-import { prisma } from "@/lib/prisma";
 import { createPost } from "./actions";
-import { parseContentTypeConfig } from "@/lib/utils";
+import { getContentTypeConfig } from "@/lib/utils";
 import Button from "@/ui/Button";
 import Navigation from "@/components/Navigation";
 import { PostEditor } from "@/components/PostEditor";
@@ -14,13 +13,8 @@ export const metadata: Metadata = {
 export default async function NewPostPage() {
   const session = await requireAuth();
 
-  // Get organization's content type configuration
-  const org = await prisma.organization.findUnique({
-    where: { id: session.user.organizationId },
-    select: { contentTypeConfig: true },
-  });
-
-  const config = parseContentTypeConfig(org?.contentTypeConfig);
+  // Get organization's content type configuration (cached)
+  const config = await getContentTypeConfig(session.user.organizationId);
 
   return (
     <div className="min-h-screen bg-background">

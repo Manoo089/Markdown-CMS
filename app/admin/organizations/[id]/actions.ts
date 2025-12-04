@@ -23,6 +23,7 @@ import {
   type DeleteContentTypeInput,
 } from "@/lib/schemas";
 import {
+  invalidateContentTypeCache,
   parseContentTypeConfig,
   serializeContentTypeConfig,
 } from "@/lib/utils/content-types";
@@ -193,6 +194,7 @@ export const addContentType = adminAction<AddContentTypeInput, void>(
       data: { contentTypeConfig: serializeContentTypeConfig(newConfig) },
     });
 
+    await invalidateContentTypeCache();
     revalidatePath(`/admin/organizations/${data.organizationId}`);
   },
 );
@@ -247,6 +249,7 @@ export const updateContentType = adminAction<UpdateContentTypeInput, void>(
       data: { contentTypeConfig: serializeContentTypeConfig(newConfig) },
     });
 
+    await invalidateContentTypeCache();
     revalidatePath(`/admin/organizations/${data.organizationId}`);
   },
 );
@@ -291,6 +294,7 @@ export const deleteContentType = adminAction<DeleteContentTypeInput, void>(
       data: { contentTypeConfig: serializeContentTypeConfig(newConfig) },
     });
 
+    await invalidateContentTypeCache();
     revalidatePath(`/admin/organizations/${data.organizationId}`);
   },
 );
