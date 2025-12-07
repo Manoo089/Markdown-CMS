@@ -66,3 +66,13 @@ export {
   type UpdateContentTypeInput,
   type DeleteContentTypeInput,
 } from "./content-type.schema";
+
+// Category Schemas
+export {
+  createCategorySchema,
+  updateCategorySchema,
+  deleteCategorySchema,
+  type CreateCategoryInput,
+  type UpdateCategoryInput,
+  type DeleteCategoryInput,
+} from "./category.schema";
