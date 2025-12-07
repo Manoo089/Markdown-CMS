@@ -32,6 +32,16 @@ export default function PostCard({ post, search }: Props) {
               value={post.published ? "published" : "draft"}
               variant="status"
             />
+
+            {/* Category Badge */}
+            {post.category && (
+              <>
+                <span>•</span>
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+                  {post.category.name}
+                </span>
+              </>
+            )}
           </div>
         </div>
 

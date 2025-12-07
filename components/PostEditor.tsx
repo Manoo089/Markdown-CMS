@@ -24,6 +24,15 @@ import { ContentTypeDefinition } from "@/types/content-type";
 // ============================================================================
 
 /**
+ * Category option for the select field
+ */
+export interface CategoryOption {
+  id: string;
+  name: string;
+  parentName?: string | null;
+}
+
+/**
  * Post data structure for editing
  */
 export interface PostData {
@@ -34,6 +43,7 @@ export interface PostData {
   excerpt: string | null;
   type: string;
   published: boolean;
+  categoryId: string | null;
 }
 
 /**
@@ -46,6 +56,8 @@ interface PostEditorProps {
   initialData?: PostData;
   /** Available content types from organization config */
   contentTypeOptions: ContentTypeDefinition[];
+  /** Available categories for selection */
+  categoryOptions?: CategoryOption[];
   /** Server action to call on submit */
   onSubmit: (data: PostFormData) => Promise<ActionResult<{ postId: string }>>;
 }
@@ -61,6 +73,7 @@ export interface PostFormData {
   excerpt?: string;
   type: string;
   published: boolean;
+  categoryId?: string | null;
 }
 
 // ============================================================================
@@ -74,6 +87,7 @@ const DEFAULT_POST_DATA: PostData = {
   excerpt: "",
   type: "post",
   published: false,
+  categoryId: null,
 };
 
 // ============================================================================
@@ -88,6 +102,7 @@ const DEFAULT_POST_DATA: PostData = {
  * <PostEditor
  *   mode="create"
  *   contentTypeOptions={config.types}
+ *   categoryOptions={categories}
  *   onSubmit={createPost}
  * />
  *
@@ -97,6 +112,7 @@ const DEFAULT_POST_DATA: PostData = {
  *   mode="edit"
  *   initialData={post}
  *   contentTypeOptions={config.types}
+ *   categoryOptions={categories}
  *   onSubmit={(data) => updatePost({ ...data, postId: post.id })}
  * />
  */
@@ -104,6 +120,7 @@ export function PostEditor({
   mode,
   initialData,
   contentTypeOptions,
+  categoryOptions = [],
   onSubmit,
 }: PostEditorProps) {
   const router = useRouter();
@@ -118,6 +135,7 @@ export function PostEditor({
   const [excerpt, setExcerpt] = useState(initial.excerpt || "");
   const [type, setType] = useState(initial.type);
   const [published, setPublished] = useState(initial.published);
+  const [categoryId, setCategoryId] = useState(initial.categoryId || "");
 
   // UI state
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -128,6 +146,15 @@ export function PostEditor({
 
   // Computed slug (auto-generate from title if not manually set)
   const slug = manualSlug || generateSlug(title);
+
+  // Category options for SelectField
+  const categorySelectOptions = [
+    { value: "", label: "No Category" },
+    ...categoryOptions.map((c) => ({
+      value: c.id,
+      label: c.parentName ? `${c.parentName} → ${c.name}` : c.name,
+    })),
+  ];
 
   // Mode-specific labels
   const labels = {
@@ -157,6 +184,7 @@ export function PostEditor({
       excerpt: excerpt || undefined,
       type,
       published,
+      categoryId: categoryId || null,
     };
 
     // Include postId for edit mode
@@ -215,15 +243,30 @@ export function PostEditor({
         onChange={(e) => setManualSlug(e.target.value)}
       />
 
-      {/* Content Type Select */}
-      <SelectField
-        id="type"
-        label="Content Type"
-        options={contentTypeOptions}
-        value={type}
-        fullWidth
-        onChange={(e) => setType(e.target.value)}
-      />
+      {/* Content Type and Category Row */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Content Type Select */}
+        <SelectField
+          id="type"
+          label="Content Type"
+          options={contentTypeOptions}
+          value={type}
+          fullWidth
+          onChange={(e) => setType(e.target.value)}
+        />
+
+        {/* Category Select */}
+        {categoryOptions.length > 0 && (
+          <SelectField
+            id="categoryId"
+            label="Category"
+            options={categorySelectOptions}
+            value={categoryId}
+            fullWidth
+            onChange={(e) => setCategoryId(e.target.value)}
+          />
+        )}
+      </div>
 
       {/* Excerpt Field */}
       <TextareaField

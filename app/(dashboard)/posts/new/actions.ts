@@ -36,6 +36,23 @@ export async function createPost(
 
     const data = parsed.data;
 
+    // Extract categoryId from input (not in schema, handled separately)
+    const categoryId = (input as { categoryId?: string | null })?.categoryId;
+
+    // Validate categoryId if provided
+    if (categoryId) {
+      const category = await prisma.category.findFirst({
+        where: {
+          id: categoryId,
+          organizationId: authContext.organizationId,
+        },
+      });
+
+      if (!category) {
+        return error("Category not found", ErrorCode.VALIDATION_ERROR);
+      }
+    }
+
     // Check if slug already exists
     const existingPost = await prisma.post.findUnique({
       where: {
@@ -65,11 +82,13 @@ export async function createPost(
         publishedAt: data.published ? new Date() : null,
         authorId: authContext.userId,
         organizationId: authContext.organizationId,
+        categoryId: categoryId || null,
       },
     });
 
     // Invalidate cache
     revalidatePath("/");
+    revalidatePath("/posts");
 
     // Return post ID for redirect
     return { success: true, data: { postId: post.id } };

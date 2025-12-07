@@ -41,6 +41,20 @@ export default async function EditPostPage({ params }: Props) {
   // Get organization's content type configuration (cached)
   const config = await getContentTypeConfig(session.user.organizationId);
 
+  // Get categories for this organization
+  const categories = await prisma.category.findMany({
+    where: { organizationId: session.user.organizationId },
+    include: { parent: { select: { name: true } } },
+    orderBy: { name: "asc" },
+  });
+
+  // Transform to CategoryOption format
+  const categoryOptions = categories.map((c) => ({
+    id: c.id,
+    name: c.name,
+    parentName: c.parent?.name || null,
+  }));
+
   return (
     <>
       <div className="mb-6">
@@ -51,6 +65,7 @@ export default async function EditPostPage({ params }: Props) {
         mode="edit"
         initialData={post}
         contentTypeOptions={config.types}
+        categoryOptions={categoryOptions}
         onSubmit={updatePost}
       />
     </>

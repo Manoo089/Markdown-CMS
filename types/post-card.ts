@@ -10,5 +10,9 @@ export interface PostCardType {
     createdAt: Date;
     type: string;
     published: boolean;
+    category: {
+      id: string;
+      name: string;
+    } | null;
   };
 }

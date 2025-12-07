@@ -1,22 +1,25 @@
 import { Metadata } from "next";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { prisma } from "@/lib/prisma";
+import { CategoriesClient } from "./categories-client";
 
 export const metadata: Metadata = {
   title: "Categories",
 };
 
-export default function CategoriesPage() {
-  return (
-    <>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold">Categories</h1>
-        <p className="text-text-muted mt-2">
-          Organize your blog posts into categories
-        </p>
-      </div>
+export default async function CategoriesPage() {
+  const session = await auth();
+  if (!session?.user) redirect("/login");
 
-      <div className="bg-surface rounded-lg border border-border p-8 text-center">
-        <p className="text-text-muted">Categories feature coming soon...</p>
-      </div>
-    </>
-  );
+  const categories = await prisma.category.findMany({
+    where: { organizationId: session.user.organizationId },
+    include: {
+      parent: { select: { id: true, name: true } },
+      _count: { select: { posts: true, children: true } },
+    },
+    orderBy: { name: "asc" },
+  });
+
+  return <CategoriesClient initialCategories={categories} />;
 }

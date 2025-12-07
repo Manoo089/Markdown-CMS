@@ -55,6 +55,9 @@ export async function PostsList({
         author: {
           select: { name: true, email: true },
         },
+        category: {
+          select: { id: true, name: true },
+        },
       },
       skip: (page - 1) * POSTS_PER_PAGE,
       take: POSTS_PER_PAGE,

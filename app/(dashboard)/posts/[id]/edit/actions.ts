@@ -36,6 +36,23 @@ export async function updatePost(
 
     const data = parsed.data;
 
+    // Extract categoryId from input (not in schema, handled separately)
+    const categoryId = (input as { categoryId?: string | null })?.categoryId;
+
+    // Validate categoryId if provided
+    if (categoryId) {
+      const category = await prisma.category.findFirst({
+        where: {
+          id: categoryId,
+          organizationId: authContext.organizationId,
+        },
+      });
+
+      if (!category) {
+        return error("Category not found", ErrorCode.VALIDATION_ERROR);
+      }
+    }
+
     // Check if post exists and belongs to organization
     const currentPost = await prisma.post.findUnique({
       where: { id: data.postId },
@@ -80,11 +97,13 @@ export async function updatePost(
           data.published && !currentPost.published
             ? new Date() // Setze publishedAt nur beim ersten Publish
             : currentPost.publishedAt,
+        categoryId: categoryId || null,
       },
     });
 
     // Cache invalidieren
     revalidatePath("/");
+    revalidatePath("/posts");
 
     return { success: true, data: { postId: post.id } };
   } catch (err) {
