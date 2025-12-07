@@ -76,3 +76,13 @@ export {
   type UpdateCategoryInput,
   type DeleteCategoryInput,
 } from "./category.schema";
+
+// Tag Schemas
+export {
+  createTagSchema,
+  updateTagSchema,
+  deleteTagSchema,
+  type CreateTagInput,
+  type UpdateTagInput,
+  type DeleteTagInput,
+} from "./tag.schema";

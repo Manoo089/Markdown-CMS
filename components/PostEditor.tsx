@@ -33,6 +33,14 @@ export interface CategoryOption {
 }
 
 /**
+ * Tag option for the multi-select
+ */
+export interface TagOption {
+  id: string;
+  name: string;
+}
+
+/**
  * Post data structure for editing
  */
 export interface PostData {
@@ -44,6 +52,7 @@ export interface PostData {
   type: string;
   published: boolean;
   categoryId: string | null;
+  tags?: { id: string }[];
 }
 
 /**
@@ -58,6 +67,8 @@ interface PostEditorProps {
   contentTypeOptions: ContentTypeDefinition[];
   /** Available categories for selection */
   categoryOptions?: CategoryOption[];
+  /** Available tags for selection */
+  tagOptions?: TagOption[];
   /** Server action to call on submit */
   onSubmit: (data: PostFormData) => Promise<ActionResult<{ postId: string }>>;
 }
@@ -74,6 +85,7 @@ export interface PostFormData {
   type: string;
   published: boolean;
   categoryId?: string | null;
+  tagIds?: string[];
 }
 
 // ============================================================================
@@ -88,6 +100,7 @@ const DEFAULT_POST_DATA: PostData = {
   type: "post",
   published: false,
   categoryId: null,
+  tags: [],
 };
 
 // ============================================================================
@@ -121,6 +134,7 @@ export function PostEditor({
   initialData,
   contentTypeOptions,
   categoryOptions = [],
+  tagOptions = [],
   onSubmit,
 }: PostEditorProps) {
   const router = useRouter();
@@ -136,6 +150,9 @@ export function PostEditor({
   const [type, setType] = useState(initial.type);
   const [published, setPublished] = useState(initial.published);
   const [categoryId, setCategoryId] = useState(initial.categoryId || "");
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>(
+    initial.tags?.map((t) => t.id) || [],
+  );
 
   // UI state
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -185,6 +202,7 @@ export function PostEditor({
       type,
       published,
       categoryId: categoryId || null,
+      tagIds: selectedTagIds,
     };
 
     // Include postId for edit mode
@@ -267,6 +285,47 @@ export function PostEditor({
           />
         )}
       </div>
+
+      {/* Tags Multi-Select */}
+      {tagOptions.length > 0 && (
+        <div>
+          <label className="block text-sm font-medium text-text mb-2">
+            Tags
+          </label>
+          <div className="flex flex-wrap gap-2 p-3 border border-border rounded-lg bg-surface min-h-[42px]">
+            {tagOptions.map((tag) => {
+              const isSelected = selectedTagIds.includes(tag.id);
+              return (
+                <button
+                  key={tag.id}
+                  type="button"
+                  onClick={() => {
+                    setSelectedTagIds((prev) =>
+                      isSelected
+                        ? prev.filter((id) => id !== tag.id)
+                        : [...prev, tag.id],
+                    );
+                  }}
+                  className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                    isSelected
+                      ? "bg-primary text-white"
+                      : "bg-surface-hover text-text-muted hover:bg-primary/10 hover:text-primary"
+                  }`}
+                >
+                  {tag.name}
+                  {isSelected && <span className="ml-1">×</span>}
+                </button>
+              );
+            })}
+          </div>
+          {selectedTagIds.length > 0 && (
+            <p className="mt-1 text-xs text-text-muted">
+              {selectedTagIds.length} tag{selectedTagIds.length !== 1 && "s"}{" "}
+              selected
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Excerpt Field */}
       <TextareaField

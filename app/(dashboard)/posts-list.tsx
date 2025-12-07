@@ -47,26 +47,26 @@ export async function PostsList({
     ];
   }
 
-  const [posts, totalPosts] = await Promise.all([
-    prisma.post.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      include: {
-        author: {
-          select: { name: true, email: true },
-        },
-        category: {
-          select: { id: true, name: true },
-        },
-      },
-      skip: (page - 1) * POSTS_PER_PAGE,
-      take: POSTS_PER_PAGE,
-    }),
-
-    prisma.post.count({ where }),
-  ]);
-
+  const totalPosts = await prisma.post.count({ where });
   const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
+
+  const posts = await prisma.post.findMany({
+    where,
+    orderBy: { createdAt: "desc" },
+    include: {
+      author: {
+        select: { name: true, email: true },
+      },
+      category: {
+        select: { id: true, name: true },
+      },
+      tags: {
+        select: { id: true, name: true },
+      },
+    },
+    skip: (page - 1) * POSTS_PER_PAGE,
+    take: POSTS_PER_PAGE,
+  });
 
   if (totalPosts === 0) {
     return (

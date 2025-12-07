@@ -19,7 +19,7 @@ export default function PostCard({ post, search }: Props) {
               <HighlightText text={post.excerpt} search={search} />
             </p>
           )}
-          <div className="flex items-center gap-4 text-sm text-text-muted">
+          <div className="flex items-center gap-4 text-sm text-text-muted flex-wrap">
             <span>By {post.author.name || post.author.email}</span>
             <span>•</span>
             <span>{new Date(post.createdAt).toLocaleDateString()}</span>
@@ -40,6 +40,23 @@ export default function PostCard({ post, search }: Props) {
                 <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
                   {post.category.name}
                 </span>
+              </>
+            )}
+
+            {/* Tags */}
+            {post.tags.length > 0 && (
+              <>
+                <span>•</span>
+                <div className="flex items-center gap-1">
+                  {post.tags.map((tag) => (
+                    <span
+                      key={tag.id}
+                      className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-surface-hover text-text-muted"
+                    >
+                      #{tag.name}
+                    </span>
+                  ))}
+                </div>
               </>
             )}
           </div>

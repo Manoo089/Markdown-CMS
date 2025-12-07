@@ -1,22 +1,24 @@
 import { Metadata } from "next";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { prisma } from "@/lib/prisma";
+import { TagsClient } from "./tags-client";
 
 export const metadata: Metadata = {
   title: "Tags",
 };
 
-export default function TagsPage() {
-  return (
-    <>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold">Tags</h1>
-        <p className="text-text-muted mt-2">
-          Add tags to your posts for better discoverability
-        </p>
-      </div>
+export default async function TagsPage() {
+  const session = await auth();
+  if (!session?.user) redirect("/login");
 
-      <div className="bg-surface rounded-lg border border-border p-8 text-center">
-        <p className="text-text-muted">Tags feature coming soon...</p>
-      </div>
-    </>
-  );
+  const tags = await prisma.tag.findMany({
+    where: { organizationId: session.user.organizationId },
+    include: {
+      _count: { select: { posts: true } },
+    },
+    orderBy: { name: "asc" },
+  });
+
+  return <TagsClient initialTags={tags} />;
 }

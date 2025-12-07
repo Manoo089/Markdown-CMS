@@ -36,8 +36,9 @@ export async function createPost(
 
     const data = parsed.data;
 
-    // Extract categoryId from input (not in schema, handled separately)
+    // Extract categoryId and tagIds from input (not in schema, handled separately)
     const categoryId = (input as { categoryId?: string | null })?.categoryId;
+    const tagIds = (input as { tagIds?: string[] })?.tagIds || [];
 
     // Validate categoryId if provided
     if (categoryId) {
@@ -50,6 +51,21 @@ export async function createPost(
 
       if (!category) {
         return error("Category not found", ErrorCode.VALIDATION_ERROR);
+      }
+    }
+
+    // Validate tagIds if provided
+    if (tagIds.length > 0) {
+      const validTags = await prisma.tag.findMany({
+        where: {
+          id: { in: tagIds },
+          organizationId: authContext.organizationId,
+        },
+        select: { id: true },
+      });
+
+      if (validTags.length !== tagIds.length) {
+        return error("One or more tags not found", ErrorCode.VALIDATION_ERROR);
       }
     }
 
@@ -70,19 +86,22 @@ export async function createPost(
       );
     }
 
-    // Create post
+    // Create post with tags
     const post = await prisma.post.create({
       data: {
         title: data.title,
         slug: data.slug,
         content: data.content,
         excerpt: data.excerpt || null,
-        type: data.type, // Validated against organization's allowed types
+        type: data.type,
         published: data.published,
         publishedAt: data.published ? new Date() : null,
         authorId: authContext.userId,
         organizationId: authContext.organizationId,
         categoryId: categoryId || null,
+        tags: {
+          connect: tagIds.map((id) => ({ id })),
+        },
       },
     });
 

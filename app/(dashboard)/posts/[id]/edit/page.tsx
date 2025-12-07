@@ -23,9 +23,12 @@ export default async function EditPostPage({ params }: Props) {
 
   const { id } = await params;
 
-  // Post aus DB holen
+  // Post aus DB holen (mit Tags)
   const post = await prisma.post.findUnique({
     where: { id },
+    include: {
+      tags: { select: { id: true } },
+    },
   });
 
   // Post existiert nicht → 404
@@ -48,11 +51,23 @@ export default async function EditPostPage({ params }: Props) {
     orderBy: { name: "asc" },
   });
 
+  // Get tags for this organization
+  const tags = await prisma.tag.findMany({
+    where: { organizationId: session.user.organizationId },
+    orderBy: { name: "asc" },
+  });
+
   // Transform to CategoryOption format
   const categoryOptions = categories.map((c) => ({
     id: c.id,
     name: c.name,
     parentName: c.parent?.name || null,
+  }));
+
+  // Transform to TagOption format
+  const tagOptions = tags.map((t) => ({
+    id: t.id,
+    name: t.name,
   }));
 
   return (
@@ -66,6 +81,7 @@ export default async function EditPostPage({ params }: Props) {
         initialData={post}
         contentTypeOptions={config.types}
         categoryOptions={categoryOptions}
+        tagOptions={tagOptions}
         onSubmit={updatePost}
       />
     </>

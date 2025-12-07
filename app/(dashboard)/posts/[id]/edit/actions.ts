@@ -36,8 +36,9 @@ export async function updatePost(
 
     const data = parsed.data;
 
-    // Extract categoryId from input (not in schema, handled separately)
+    // Extract categoryId and tagIds from input (not in schema, handled separately)
     const categoryId = (input as { categoryId?: string | null })?.categoryId;
+    const tagIds = (input as { tagIds?: string[] })?.tagIds || [];
 
     // Validate categoryId if provided
     if (categoryId) {
@@ -50,6 +51,21 @@ export async function updatePost(
 
       if (!category) {
         return error("Category not found", ErrorCode.VALIDATION_ERROR);
+      }
+    }
+
+    // Validate tagIds if provided
+    if (tagIds.length > 0) {
+      const validTags = await prisma.tag.findMany({
+        where: {
+          id: { in: tagIds },
+          organizationId: authContext.organizationId,
+        },
+        select: { id: true },
+      });
+
+      if (validTags.length !== tagIds.length) {
+        return error("One or more tags not found", ErrorCode.VALIDATION_ERROR);
       }
     }
 
@@ -83,7 +99,7 @@ export async function updatePost(
       throw new Error("A post with this slug already exists");
     }
 
-    // Post updaten
+    // Post updaten mit Tags (set ersetzt alle existierenden Tags)
     const post = await prisma.post.update({
       where: { id: data.postId },
       data: {
@@ -95,9 +111,12 @@ export async function updatePost(
         published: data.published,
         publishedAt:
           data.published && !currentPost.published
-            ? new Date() // Setze publishedAt nur beim ersten Publish
+            ? new Date()
             : currentPost.publishedAt,
         categoryId: categoryId || null,
+        tags: {
+          set: tagIds.map((id) => ({ id })),
+        },
       },
     });
 

@@ -14,5 +14,9 @@ export interface PostCardType {
       id: string;
       name: string;
     } | null;
+    tags: {
+      id: string;
+      name: string;
+    }[];
   };
 }
