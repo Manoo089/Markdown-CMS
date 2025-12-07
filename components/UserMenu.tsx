@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { UserAvatar } from "@/components/UserAvatar";
-import { handleSignOut } from "@/app/dashboard/actions";
+import { handleSignOut } from "@/app/(dashboard)/actions";
 import ChevronIcon from "@/public/chevron.svg";
 
 interface UserMenuProps {
@@ -66,7 +66,7 @@ export function UserMenu({ name, email }: UserMenuProps) {
           </div>
 
           <Link
-            href="/dashboard/profile"
+            href="/profile"
             className="block px-4 py-2 text-sm text-text hover:bg-surface-hover transition-colors"
             onClick={() => setIsOpen(false)}
           >

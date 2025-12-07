@@ -176,7 +176,7 @@ export function PostEditor({
     }
 
     if (isSuccess(result)) {
-      router.push("/dashboard");
+      router.push("/");
       router.refresh();
     }
   };
@@ -295,7 +295,7 @@ export function PostEditor({
         <Button
           type="button"
           label="Cancel"
-          onClick={() => router.push("/dashboard")}
+          onClick={() => router.push("/")}
           variant="outline"
           color="secondary"
         />

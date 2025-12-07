@@ -10,7 +10,7 @@ import { redirect } from "next/navigation";
 
 /**
  * Require admin access for a page (Server Component)
- * Redirects to /login if not authenticated, or /dashboard if not admin
+ * Redirects to /login if not authenticated, or / if not admin
  *
  * @example
  * ```typescript
@@ -38,7 +38,7 @@ export async function requireAdmin() {
 
   if (!user?.isAdmin) {
     // Nicht-Admins zum Dashboard redirecten
-    redirect("/dashboard");
+    redirect("/");
   }
 
   return session;

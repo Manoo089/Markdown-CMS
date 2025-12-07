@@ -75,8 +75,8 @@ export async function getContentTypeConfig(
 export async function invalidateContentTypeCache(): Promise<void> {
   const { revalidatePath } = await import("next/cache");
   // Revalidate dashboard paths that use content type config
-  revalidatePath("/dashboard/posts/new");
-  revalidatePath("/dashboard/posts", "layout");
+  revalidatePath("/posts/new");
+  revalidatePath("/posts", "layout");
 }
 
 // ============================================================================

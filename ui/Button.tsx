@@ -60,7 +60,7 @@ type Props = ButtonProps | LinkProps;
  *
  * @example
  * // Als Link
- * <Button href="/dashboard" label="Zum Dashboard" />
+ * <Button href="/" label="Zum Dashboard" />
  *
  * @example
  * // Danger outline

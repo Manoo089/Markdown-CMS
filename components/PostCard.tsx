@@ -1,5 +1,5 @@
-import { DeleteButton } from "@/app/dashboard/delete-button";
-import { HighlightText } from "@/app/dashboard/highlight-text";
+import { DeleteButton } from "@/app/(dashboard)/delete-button";
+import { HighlightText } from "@/app/(dashboard)/highlight-text";
 import { PostCardType } from "@/types/post-card";
 import Badge from "@/ui/Badge";
 import Button from "@/ui/Button";
@@ -37,7 +37,7 @@ export default function PostCard({ post, search }: Props) {
 
         <div className="ml-4 flex gap-3">
           <Button
-            href={`/dashboard/posts/${post.id}/edit`}
+            href={`/posts/${post.id}/edit`}
             variant="plain"
             label="Edit"
             className="text-sm"

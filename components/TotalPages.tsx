@@ -10,7 +10,7 @@ export default function TotalPages({ page, filterSuffix, totalPages }: Props) {
   return (
     <div className="flex justify-center items-center gap-2 mt-6">
       <Button
-        href={`/dashboard?page=${page - 1}${filterSuffix}`}
+        href={`/?page=${page - 1}${filterSuffix}`}
         label="Previous"
         variant="outline"
         color="secondary"
@@ -22,7 +22,7 @@ export default function TotalPages({ page, filterSuffix, totalPages }: Props) {
       </span>
 
       <Button
-        href={`/dashboard?page=${page + 1}${filterSuffix}`}
+        href={`/?page=${page + 1}${filterSuffix}`}
         label="Next"
         variant="outline"
         color="secondary"

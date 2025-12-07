@@ -41,7 +41,7 @@ export type Message = {
  *   e.preventDefault();
  *   const success = await execute({ name, email });
  *   if (success) {
- *     router.push('/dashboard');
+ *     router.push('/');
  *   }
  * };
  * ```
@@ -266,7 +266,7 @@ export function useFormErrors() {
  * const handleDelete = () => {
  *   execute(async () => {
  *     await deletePost(postId);
- *     router.push('/dashboard');
+ *     router.push('/');
  *   });
  * };
  * ```
