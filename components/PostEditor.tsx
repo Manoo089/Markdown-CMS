@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { generateSlug } from "@/lib/slug-utils";
 import { useMessage } from "@/hooks/useActionState";
-import { MarkdownPreview } from "@/components/MarkdownPreview";
+import { TiptapEditor } from "@/components/TiptapEditor";
 import { MessageAlert } from "@/components/MessageAlert";
 import Button from "@/ui/Button";
 import InputField from "@/ui/InputField";
@@ -156,7 +156,6 @@ export function PostEditor({
 
   // UI state
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showPreview, setShowPreview] = useState(true);
 
   // Message handling
   const { message, showError, clearMessage } = useMessage();
@@ -332,47 +331,22 @@ export function PostEditor({
         id="excerpt"
         label="Excerpt (Optional)"
         value={excerpt}
-        placeholder="Short description..."
+        placeholder="Short description for previews and SEO..."
         rows={3}
         fullWidth
-        advancedLabel="(auto-generated, but editable)"
         onChange={(e) => setExcerpt(e.target.value)}
       />
 
-      {/* Markdown Content with Preview */}
+      {/* Rich Text Content Editor */}
       <div>
-        <div className="flex items-center justify-between mb-2">
-          <label className="block text-sm font-medium text-text">
-            Content (Markdown)
-          </label>
-          <Button
-            type="button"
-            label={showPreview ? "Hide Preview" : "Show Preview"}
-            onClick={() => setShowPreview(!showPreview)}
-            variant="plain"
-            className="text-sm text-primary hover:text-primary-hover font-medium"
-          />
-        </div>
-        <div
-          className={`grid gap-4 ${showPreview ? "grid-cols-2" : "grid-cols-1"}`}
-        >
-          <TextareaField
-            id="content"
-            label=""
-            value={content}
-            placeholder="# Your markdown content here..."
-            rows={20}
-            fullWidth
-            isMarkdown
-            onChange={(e) => setContent(e.target.value)}
-          />
-
-          {showPreview && (
-            <div className="border border-border rounded-md p-4 bg-surface overflow-auto max-h-[500px]">
-              <MarkdownPreview content={content} />
-            </div>
-          )}
-        </div>
+        <label className="block text-sm font-medium text-text mb-2">
+          Content
+        </label>
+        <TiptapEditor
+          content={content}
+          onChange={setContent}
+          placeholder="Start writing your content..."
+        />
       </div>
 
       {/* Published Checkbox */}
