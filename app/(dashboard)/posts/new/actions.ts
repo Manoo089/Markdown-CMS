@@ -6,6 +6,7 @@ import { getAuthContext } from "@/lib/auth-utils";
 import { ActionResult, error, ErrorCode, validationError } from "@/lib/errors";
 import { createPostSchemaForOrg } from "@/lib/schemas";
 import { getContentTypeConfig, getAllowedTypeValues } from "@/lib/utils";
+import { sanitizeContent } from "@/lib/sanitize";
 
 // ============================================================================
 // CREATE POST ACTION
@@ -86,12 +87,14 @@ export async function createPost(
       );
     }
 
+    const sanitizedConent = sanitizeContent(data.content);
+
     // Create post with tags
     const post = await prisma.post.create({
       data: {
         title: data.title,
         slug: data.slug,
-        content: data.content,
+        content: sanitizedConent,
         excerpt: data.excerpt || null,
         type: data.type,
         published: data.published,

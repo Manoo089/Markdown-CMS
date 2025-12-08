@@ -6,6 +6,7 @@ import { getAuthContext } from "@/lib/auth-utils";
 import { ActionResult, error, ErrorCode, validationError } from "@/lib/errors";
 import { createUpdatePostSchemaForOrg } from "@/lib/schemas";
 import { getContentTypeConfig, getAllowedTypeValues } from "@/lib/utils";
+import { sanitizeContent } from "@/lib/sanitize";
 
 // ============================================================================
 // UPDATE POST ACTION
@@ -99,13 +100,15 @@ export async function updatePost(
       throw new Error("A post with this slug already exists");
     }
 
+    const sanitizedContent = sanitizeContent(data.content);
+
     // Post updaten mit Tags (set ersetzt alle existierenden Tags)
     const post = await prisma.post.update({
       where: { id: data.postId },
       data: {
         title: data.title,
         slug: data.slug,
-        content: data.content,
+        content: sanitizedContent,
         excerpt: data.excerpt || null,
         type: data.type,
         published: data.published,
