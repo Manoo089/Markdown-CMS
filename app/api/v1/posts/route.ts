@@ -10,6 +10,8 @@ export const GET = apiRoute(async (request: NextRequest, { organization }) => {
   const { searchParams } = new URL(request.url);
   const type = searchParams.get("type");
   const published = searchParams.get("published");
+  const categorySlug = searchParams.get("category");
+  const tagSlugs = searchParams.getAll("tag");
   const limit = parseInt(searchParams.get("limit") || "10");
   const offset = parseInt(searchParams.get("offset") || "0");
 
@@ -24,6 +26,19 @@ export const GET = apiRoute(async (request: NextRequest, { organization }) => {
 
   if (published !== null) {
     where.published = published === "true";
+  }
+
+  if (categorySlug) {
+    where.category = { slug: categorySlug };
+  }
+
+  // Filter by tag slugs (posts must have ALL specified tags)
+  if (tagSlugs.length > 0) {
+    where.tags = {
+      some: {
+        slug: { in: tagSlugs },
+      },
+    };
   }
 
   // Fetch posts
@@ -48,6 +63,20 @@ export const GET = apiRoute(async (request: NextRequest, { organization }) => {
           select: {
             id: true,
             name: true,
+          },
+        },
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        tags: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
           },
         },
       },
